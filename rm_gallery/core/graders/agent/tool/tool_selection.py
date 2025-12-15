@@ -165,7 +165,6 @@ class ToolSelectionGrader(LLMGrader):
         model: BaseChatModel instance for evaluation
         template: Evaluation template
         language: Language for evaluation prompts (default: LanguageEnum.EN)
-        threshold: threshold [0, 1] (default: 0.7)
 
     Example:
         >>> from rm_gallery.core.model.openai_llm import OpenAIChatModel
@@ -179,22 +178,26 @@ class ToolSelectionGrader(LLMGrader):
         >>>
         >>> grader = ToolSelectionGrader(
         ...     model=api,
-        ...     threshold=0.7,
         ...     language=LanguageEnum.EN
         ... )
         >>>
         >>> result = await grader.aevaluate(
         ...     query="Find all Python files modified in the last week",
-        ...     available_tools="search_files, list_directory, get_file_info, git_log",
-        ...     selected_tools="search_files, git_log"
+        ...     tool_definitions=[
+        ...         {"name": "search_files", "description": "Search for files"},
+        ...         {"name": "git_log", "description": "Get git history"}
+        ...     ],
+        ...     tool_calls=[
+        ...         {"name": "search_files", "arguments": {"pattern": "*.py"}},
+        ...         {"name": "git_log", "arguments": {"days": 7}}
+        ...     ]
         ... )
-        >>> print(f"Score: {result.score}")  # High score for good selection
+        >>> print(f"Score: {result.score}")  # Score from 1 to 5
     """
 
     def __init__(
         self,
         model: BaseChatModel | dict,
-        threshold: float = 0.7,
         template: Optional[PromptTemplate] = DEFAULT_TOOL_SELECTION_TEMPLATE,
         language: LanguageEnum = LanguageEnum.EN,
     ):
@@ -206,7 +209,6 @@ class ToolSelectionGrader(LLMGrader):
             template=template,
             language=language,
         )
-        self.threshold = threshold
         self.template = template if template is not None else DEFAULT_TOOL_SELECTION_TEMPLATE
 
     async def aevaluate(
@@ -227,7 +229,7 @@ class ToolSelectionGrader(LLMGrader):
             **kwargs: Additional arguments
 
         Returns:
-            GraderScore: Score from 0.0 to 1.0 indicating tool selection quality
+            GraderScore: Score from 1 to 5 indicating tool selection quality
 
         Example:
             >>> conversation = [
@@ -263,7 +265,7 @@ class ToolSelectionGrader(LLMGrader):
         available_tools = json.dumps(tool_definitions, indent=2, ensure_ascii=False)
 
         # Format selected tools
-        selected_tools = json.dumps(tool_calls, indent=2,  ensure_ascii=False)
+        selected_tools = json.dumps(tool_calls, indent=2, ensure_ascii=False)
 
         try:
             result = await super().aevaluate(
@@ -282,7 +284,6 @@ class ToolSelectionGrader(LLMGrader):
 
         # Prepare metadata
         metadata = {
-            "threshold": self.threshold,
             "raw_score": score,
         }
 
