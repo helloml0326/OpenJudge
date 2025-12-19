@@ -19,14 +19,14 @@ nav:
   - Get Started:
       - Introduction: get-started/introduction.md
       - Quick Start: get-started/quickstart.md
-      - Evaluate an AI Agent: get-started/evaluate-agent.md
+      - Evaluate an AI Agent: get_started/evaluate_ai_agents.md
       - Build Reward for Training: get-started/build-reward.md
       - Core Concepts: get-started/core-concepts.md
 
   - Built-in Graders:
       - Overview: graders/overview.md
       - General Graders: graders/general.md
-      - Agent Graders: graders/agent.md
+      - Agent Graders: built-in_graders/agent_graders.md
       - Multimodal Graders: graders/multimodal.md
       - Code & Math Graders: graders/code-math.md
       - Text Graders: graders/text.md
@@ -35,7 +35,7 @@ nav:
   - Building Graders:
       - Overview: building-graders/overview.md
       - Create Custom Graders: building-graders/custom-graders.md
-      - Generate Graders from Data: building-graders/generate-graders.md
+      - Generate Graders from Data: building_graders/generate_graders_from_data.md
       - Train a Grader:
           - Overview: building-graders/training/overview.md
           - Bradley-Terry Training: building-graders/training/bradley-terry.md
