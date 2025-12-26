@@ -1,7 +1,7 @@
 # OpenJudge
 
 ## Why OpenJudge?
-OpenJudge is a unified framework designed to drive application excellence through **Holistic Evaluation** and **Quality Rewards**.
+OpenJudge is a unified framework designed to drive **LLM and Agent application excellence** through **Holistic Evaluation** and **Quality Rewards**.
 
 <div class="callout-tip" markdown>
 <img src="https://unpkg.com/lucide-static@latest/icons/lightbulb.svg" class="callout-icon"> Evaluation and reward signals are the cornerstones of application excellence. **Holistic evaluation** enables the systematic analysis of shortcomings to drive rapid iteration, while **high-quality** rewards provide the essential foundation for advanced optimization and fine-tuning.

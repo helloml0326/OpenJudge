@@ -32,7 +32,7 @@
 - [Contributing](#-contributing)
 - [Citation](#-citation)
 
-OpenJudge is a unified framework designed to drive application excellence through **Holistic Evaluation** and **Quality Rewards**.
+OpenJudge is a unified framework designed to drive **LLM and Agent application excellence** through **Holistic Evaluation** and **Quality Rewards**.
 
 > 💡 Evaluation and reward signals are the cornerstones of application excellence. **Holistic evaluation** enables the systematic analysis of shortcomings to drive rapid iteration, while **high-quality** rewards provide the essential foundation for advanced optimization and fine-tuning.
 
@@ -89,9 +89,9 @@ Access **50+ production-ready graders** featuring a comprehensive taxonomy, rigo
 </tr>
 </table>
 
-- 🌐 **Multi-Scenario Coverage:** Extensive support for diverse domains including Agent, text, code, math, and multimodal tasks. → [Explore Supported Scenarios](./docs/built_in_graders/overview.md)
-- 🔄 **Holistic Agent Evaluation:** Beyond final outcomes, we assess the entire lifecycle—including trajectories, Memory, Reflection, and Tool Use. → [Agent Lifecycle Evaluation](./docs/built_in_graders/agent_graders.md)
-- ✅ **Quality Assurance:** Every grader comes with benchmark datasets and pytest integration for validation. → [View Benchmark Datasets](https://huggingface.co/datasets/agentscope-ai/OpenJudge)
+- 🌐 **Multi-Scenario Coverage:** Extensive support for diverse domains including Agent, text, code, math, and multimodal tasks. 👉  [Explore Supported Scenarios](./docs/built_in_graders/overview.md)
+- 🔄 **Holistic Agent Evaluation:** Beyond final outcomes, we assess the entire lifecycle—including trajectories, Memory, Reflection, and Tool Use. 👉  [Agent Lifecycle Evaluation](./docs/built_in_graders/agent_graders.md)
+- ✅ **Quality Assurance:** Every grader comes with benchmark datasets and pytest integration for validation. 👉  [View Benchmark Datasets](https://huggingface.co/datasets/agentscope-ai/OpenJudge)
 
 
 ### 🛠️ Flexible Grader Building Methods
