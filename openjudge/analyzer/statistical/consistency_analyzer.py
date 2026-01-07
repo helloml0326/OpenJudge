@@ -113,8 +113,10 @@ class ConsistencyAnalyzer(BaseAnalyzer):
             first_run_results = dataset
             second_run_results = grader_results
         else:
-            # Insufficient argments for the current call signature: dataset and another grader result exist, but the 2nd argment (grader result) does not have value.
-            # or none of dataset, grader_results, another_grader_results exists
+            # 1. Insufficient argments for the current call signature:
+            # dataset and another grader result exist,
+            # but the 2nd argment (grader result) does not have value.
+            # Or 2. none of dataset, grader_results, another_grader_results exists.
             first_run_results = []
             second_run_results = []
 
