@@ -6,7 +6,7 @@ Evaluates whether the agent stores accurate and factual information in its memor
 """
 
 import textwrap
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 
 from loguru import logger
 
@@ -20,7 +20,8 @@ from openjudge.models.schema.prompt_template import LanguageEnum, PromptTemplate
 # pylint: disable=line-too-long
 
 # English Prompt
-MEMORY_ACCURACY_PROMPT_EN = """
+MEMORY_ACCURACY_PROMPT_EN = textwrap.dedent(
+    """
 You are an expert in analyzing agent behavior. Your task is to evaluate whether the agent stores accurate and factual information in its memory module.
 
 <Evaluation Type: Memory Accuracy>
@@ -64,9 +65,11 @@ Provide your evaluation in the following structured JSON format:
 
 JSON:
 """
+).strip()
 
 # Chinese Prompt
-MEMORY_ACCURACY_PROMPT_ZH = """
+MEMORY_ACCURACY_PROMPT_ZH = textwrap.dedent(
+    """
 你是一名分析智能体行为的专家。你的任务是评估智能体是否在其记忆模块中存储了准确且真实的信息。
 
 <评估类型：记忆准确性>
@@ -110,6 +113,7 @@ MEMORY_ACCURACY_PROMPT_ZH = """
 
 JSON:
 """
+).strip()
 
 # Build default template from prompts
 DEFAULT_MEMORY_ACCURACY_TEMPLATE = PromptTemplate(
@@ -117,13 +121,13 @@ DEFAULT_MEMORY_ACCURACY_TEMPLATE = PromptTemplate(
         LanguageEnum.EN: [
             ChatMessage(
                 role="user",
-                content=textwrap.dedent(MEMORY_ACCURACY_PROMPT_EN),
+                content=MEMORY_ACCURACY_PROMPT_EN,
             ),
         ],
         LanguageEnum.ZH: [
             ChatMessage(
                 role="user",
-                content=textwrap.dedent(MEMORY_ACCURACY_PROMPT_ZH),
+                content=MEMORY_ACCURACY_PROMPT_ZH,
             ),
         ],
     },
@@ -145,25 +149,24 @@ class MemoryAccuracyGrader(LLMGrader):
         language: Language for evaluation prompts (default: LanguageEnum.EN)
 
     Example:
+        >>> import asyncio
         >>> from openjudge.model.openai_llm import OpenAIChatModel
-        >>> from openjudge.schema.template import LanguageEnum
+        >>> from openjudge.models.schema.prompt_template import LanguageEnum
         >>>
         >>> api = OpenAIChatModel(
-        ...     api_key="your-key",  # pragma: allowlist secret
+        ...     api_key="your-key",
         ...     model="qwen3-max",
         ...     generate_kwargs={"temperature": 0.1}
         ... )
-        >>>
         >>> grader = MemoryAccuracyGrader(
         ...     model=api,
         ...     language=LanguageEnum.EN
         ... )
-        >>>
-        >>> result = await grader.aevaluate(
+        >>> result = asyncio.run(grader.aevaluate(
         ...     observation="You see a closed cabinet.",
         ...     memory="The cabinet is closed."
         ... )
-        >>> print(f"Score: {result.score}")  # 1.0 (good accuracy)
+        >>> print(f"Score: {result.score}")  # Expected: 1.0
     """
 
     def __init__(
@@ -185,7 +188,7 @@ class MemoryAccuracyGrader(LLMGrader):
         self,
         observation: str,
         memory: str,
-        history: Optional[list] = None,
+        history: Optional[List[Dict[str, Any]]] = None,
         context: Optional[str] = None,
         **kwargs: Any,
     ) -> GraderScore:
@@ -210,9 +213,7 @@ class MemoryAccuracyGrader(LLMGrader):
             ... )
         """
         # Format context section
-        context_str = ""
-        if context:
-            context_str = f"<context>\n{context}\n</context>"
+        context_str = f"<context>\n{context}\n</context>" if context else ""
 
         # Format history
         history_str = format_history(history)
