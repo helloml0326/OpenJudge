@@ -19,11 +19,12 @@ OpenJudge unifies evaluation metrics and reward signals into a single, standardi
     - **Quality Assurance:** Built for reliability. Every grader comes with benchmark datasets and pytest integration for immediate quality validation. <a href="https://huggingface.co/datasets/agentscope-ai/OpenJudge" class="feature-link" target="_blank"> View Benchmark Datasets<span class="link-arrow">→</span></a>
 
 + **Flexible Grader Building**: Choose the build method that fits your requirements:
-    - **Customization:** Easily extend or modify pre-defined graders to fit your specific needs. <a href="building_graders/create_custom_graders/" class="feature-link">Custom Grader Development Guide <span class="link-arrow">→</span></a>
-    - **Generate Rubrics:** Need evaluation criteria but don't want to write them manually? Use **Simple Rubric** (from task description) or **Iterative Rubric** (from labeled data) to automatically generate white-box evaluation rubrics. <a href="building_graders/generate_rubrics_as_graders/" class="feature-link">Generate Rubrics as Graders <span class="link-arrow">→</span></a>
-    - **Training Judge Models:** For high-scale and specialized scenarios, we are developing the capability to train dedicated Judge models. Support for SFT, Bradley-Terry models, and Reinforcement Learning workflows is on the way to help you build high-performance, domain-specific graders. <span class="badge-wip">🚧 Coming Soon</span>
+    - **Customization:** Clear requirements, but no existing grader? If you have explicit rules or logic, use our Python interfaces or Prompt templates to quickly define your own grader. <a href="building_graders/create_custom_graders/" class="feature-link">Custom Grader Development Guide <span class="link-arrow">→</span></a>
+    - **Zero-shot Rubrics Generation:** Not sure what criteria to use, and no labeled data yet? Just provide a task description and optional sample queries—the LLM will automatically generate evaluation rubrics for you. Ideal for rapid prototyping. <a href="building_graders/generate_rubrics_as_graders/#simple-rubric-zero-shot-generation" class="feature-link">Zero-shot Rubrics Generation Guide <span class="link-arrow">→</span></a>
+    - **Data-driven Rubrics Generation:** Ambiguous requirements, but have few examples? Use the GraderGenerator to automatically summarize evaluation Rubrics from your annotated data, and generate a llm-based grader. <a href="building_graders/generate_rubrics_as_graders/#iterative-rubric-data-driven-generation" class="feature-link">Data-driven Rubrics Generation Guide <span class="link-arrow">→</span></a>
+    - **Training Judge Models:** Massive data and need peak performance? Use our training pipeline to train a dedicated Judge Model. This is ideal for complex scenarios where prompt-based grading falls short. <a href="building_graders/training_judge_models/" class="feature-link">Train Judge Models <span class="link-arrow">→</span></a>
 
-+ **Easy Integration**: We're actively building seamless connectors for mainstream observability platforms and training frameworks. Stay tuned!<span class="badge-wip">🚧 Coming Soon</span>
++ **Easy Integration**: Using mainstream observability platforms like **LangSmith** or **Langfuse**? We offer seamless integration to enhance their evaluators and automated evaluation capabilities. We're also building integrations with training frameworks like **verl**.
 
 </div>
 
@@ -33,25 +34,37 @@ OpenJudge unifies evaluation metrics and reward signals into a single, standardi
 
 <div class="card-grid">
 
-  <a href="get_started/evaluate_ai_agents/" class="feature-card">
-    <div class="card-header card-header-lg">
-      <img src="https://unpkg.com/lucide-static@latest/icons/bot.svg" class="card-icon card-icon-agent">
-      <h3>Evaluate An AI Agent</h3>
+  <a href="applications/zero_shot_evaluation/" class="feature-card-sm">
+    <div class="card-header">
+      <img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" class="card-icon card-icon-general">
+      <h3>Zero-Shot Evaluation</h3>
     </div>
-    <p class="card-desc card-desc-lg">
-      <b>Comprehensive evaluation for AI Agents:</b> Learn to evaluate the full lifecycle—including final response, trajectory, tool usage, plan, memory, reflection, observation—using OpenJudge Graders.
+    <p class="card-desc">
+      <b>Compare models without test data:</b> Generate queries, collect responses, and rank via pairwise evaluation.
     </p>
   </a>
 
-  <a href="get_started/build_reward/" class="feature-card">
-    <div class="card-header card-header-lg">
+  <a href="get_started/evaluate_ai_agents/" class="feature-card-sm">
+    <div class="card-header">
+      <img src="https://unpkg.com/lucide-static@latest/icons/bot.svg" class="card-icon card-icon-agent">
+      <h3>Evaluate An AI Agent</h3>
+    </div>
+    <p class="card-desc">
+      <b>Agent lifecycle evaluation:</b> Assess response, trajectory, tool usage, planning, memory, and reflection.
+    </p>
+  </a>
+
+  <a href="get_started/build_reward/" class="feature-card-sm">
+    <div class="card-header">
       <img src="https://unpkg.com/lucide-static@latest/icons/brain-circuit.svg" class="card-icon card-icon-tool">
       <h3>Build Rewards for Training</h3>
     </div>
-    <p class="card-desc card-desc-lg">
-      <b>Construct High-Quality Reward Signals:</b> Create robust reward functions for model and agent alignment by aggregating diverse graders with custom weighting and high-concurrency support.
+    <p class="card-desc">
+      <b>Quality reward signals:</b> Aggregate graders with custom weighting for model alignment.
     </p>
   </a>
+
+  
 
 </div>
 
@@ -141,24 +154,23 @@ OpenJudge unifies evaluation metrics and reward signals into a single, standardi
 
   <a href="building_graders/generate_rubrics_as_graders/" class="feature-card-sm">
     <div class="card-header">
-      <img src="https://unpkg.com/lucide-static@latest/icons/database.svg" class="card-icon card-icon-data">
-      <h3>Data-Driven Rubrics</h3>
+      <img src="https://unpkg.com/lucide-static@latest/icons/sparkles.svg" class="card-icon card-icon-data">
+      <h3>Generate Rubrics</h3>
     </div>
     <p class="card-desc">
-      <b>Ambiguous requirements, but have few examples?</b> Use the GraderGenerator to automatically summarize evaluation Rubrics from your annotated data, and generate a llm-based grader.
+      <b>Auto-generate evaluation criteria.</b> Use Zero-Shot generation from task descriptions, or Data-Driven generation to learn rubrics from labeled preference data.
     </p>
   </a>
 
-  <div class="feature-card-wip">
+  <a href="building_graders/training_judge_models/" class="feature-card-sm">
     <div class="card-header">
       <img src="https://unpkg.com/lucide-static@latest/icons/scale.svg" class="card-icon card-icon-integration">
-      <h3>Trainable Judge Model</h3>
+      <h3>Train Judge Models</h3>
     </div>
-    <span class="badge-wip">🚧 Work in Progress</span>
     <p class="card-desc">
-      <b>Massive data and need peak performance?</b> Use our training pipeline to train a dedicated Judge Model. This is ideal for complex scenarios where prompt-based grading falls short.
+      <b>Massive data and need peak performance?</b> Train dedicated judge models using SFT, Bradley-Terry, or GRPO. Supports both scalar rewards and generative evaluation with reasoning.
     </p>
-  </div>
+  </a>
 
 </div>
 
@@ -166,16 +178,25 @@ OpenJudge unifies evaluation metrics and reward signals into a single, standardi
 
 <div class="card-grid">
 
-  <div class="feature-card-wip">
+  <a href="integrations/langsmith/" class="feature-card">
     <div class="card-header">
-      <img src="https://unpkg.com/lucide-static@latest/icons/bar-chart-3.svg" class="card-icon card-icon-integration">
-      <h3>Evaluation Frameworks</h3>
-      <span class="badge-wip">🚧 Work in Progress</span>
+      <img src="https://unpkg.com/lucide-static@latest/icons/telescope.svg" class="card-icon card-icon-integration">
+      <h3>LangSmith</h3>
     </div>
     <p class="card-desc">
-      Seamlessly connect with mainstream platforms like <strong>LangSmith</strong> and <strong>LangFuse</strong>. Streamline your evaluation pipelines and monitor agent performance with flexible APIs.
+      Build external evaluation pipelines for LangSmith. Wrap OpenJudge graders as LangSmith evaluators and run batch evaluations with GradingRunner.
     </p>
-  </div>
+  </a>
+
+  <a href="integrations/langfuse/" class="feature-card">
+    <div class="card-header">
+      <img src="https://unpkg.com/lucide-static@latest/icons/activity.svg" class="card-icon card-icon-data">
+      <h3>Langfuse</h3>
+    </div>
+    <p class="card-desc">
+      Fetch traces from Langfuse, evaluate with OpenJudge graders, and push scores back. Supports batch processing and score aggregation.
+    </p>
+  </a>
 
   <div class="feature-card-wip">
     <div class="card-header">
@@ -184,7 +205,7 @@ OpenJudge unifies evaluation metrics and reward signals into a single, standardi
       <span class="badge-wip">🚧 Work in Progress</span>
     </div>
     <p class="card-desc">
-      Directly integrate into training loops such as <strong>VERL</strong>. Use Graders as high-quality reward functions for RLHF/RLAIF to align models effectively.
+      Directly integrate into training loops such as <strong>VERL</strong>. Use Graders as high-quality reward functions for fine-tuning to align models effectively.
     </p>
   </div>
 

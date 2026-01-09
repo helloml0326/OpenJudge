@@ -97,14 +97,16 @@ Access **50+ production-ready graders** featuring a comprehensive taxonomy, rigo
 
 ### 🛠️ Flexible Grader Building Methods
 Choose the build method that fits your requirements:
-* **Customization:** Easily extend or modify pre-defined graders to fit your specific needs.  👉 [Custom Grader Development Guide](https://modelscope.github.io/OpenJudge/building_graders/create_custom_graders/)
-* **Generate Rubrics:** Need evaluation criteria but don't want to write them manually? Use **Simple Rubric** (from task description) or **Iterative Rubric** (from labeled data) to automatically generate white-box evaluation rubrics. 👉 [Generate Rubrics as Graders](https://modelscope.github.io/OpenJudge/building_graders/generate_rubrics_as_graders/)
-* **Training Judge Models ( Coming Soon🚀):** For high-scale and specialized scenarios, we are developing the capability to train dedicated Judge models. Support for SFT, Bradley-Terry models, and Reinforcement Learning workflows is on the way to help you build high-performance, domain-specific graders.
+* **Customization:** Clear requirements, but no existing grader? If you have explicit rules or logic, use our Python interfaces or Prompt templates to quickly define your own grader.  👉 [Custom Grader Development Guide](https://modelscope.github.io/OpenJudge/building_graders/create_custom_graders/)
+* **Zero-shot Rubrics Generation:** Not sure what criteria to use, and no labeled data yet? Just provide a task description and optional sample queries—the LLM will automatically generate evaluation rubrics for you. Ideal for rapid prototyping when you want to get started immediately. 👉 [Zero-shot Rubrics Generation Guide](https://modelscope.github.io/OpenJudge/building_graders/generate_rubrics_as_graders/#simple-rubric-zero-shot-generation)
+* **Data-driven Rubrics Generation:** Ambiguous requirements, but have few examples? Use the GraderGenerator to automatically
+summarize evaluation Rubrics from your annotated data, and generate a llm-based grader. 👉 [Data-driven Rubrics Generation Guide](https://modelscope.github.io/OpenJudge/building_graders/generate_rubrics_as_graders/#iterative-rubric-data-driven-generation)
+* **Training Judge Models:** Massive data and need peak performance? Use our training pipeline to train a dedicated Judge Model. This is ideal for complex scenarios where prompt-based grading falls short.👉 [Train Judge Models](https://modelscope.github.io/OpenJudge/building_graders/training_judge_models/)
 
 
-### 🔌 Easy Integration (🚧 Coming Soon)
+### 🔌 Easy Integration
 
-We're actively building seamless connectors for mainstream observability platforms and training frameworks. Stay tuned! → See [Integrations](#-integrations)
+Using mainstream observability platforms like **LangSmith** or **Langfuse**? We offer seamless integration to enhance their evaluators and automated evaluation capabilities. We're also building integrations with training frameworks like **verl**. 👉 See [Integrations](#-integrations) for details
 
 ----
 ## News
@@ -163,16 +165,17 @@ if __name__ == "__main__":
 
 ## 🔗 Integrations
 
-Seamlessly connect OpenJudge with mainstream observability and training platforms, with more integrations on the way:
+Seamlessly connect OpenJudge with mainstream observability and training platforms:
 
-| Category | Status | Platforms |
-|:---------|:------:|:----------|
-| **Observability** | 🟡 In Progress | [LangSmith](https://smith.langchain.com/), [LangFuse](https://langfuse.com/), [Arize Phoenix](https://github.com/Arize-ai/phoenix) |
-| **Training** | 🔵 Planned | [verl](https://github.com/volcengine/verl), [Trinity-RFT](https://github.com/modelscope/Trinity-RFT) |
+| Category | Platform | Status | Documentation |
+|:---------|:---------|:------:|:--------------|
+| **Observability** | [LangSmith](https://smith.langchain.com/) | ✅ Available | 👉 [LangSmith Integration Guide](https://modelscope.github.io/OpenJudge/integrations/langsmith/) |
+| | [Langfuse](https://langfuse.com/) | ✅ Available | 👉 [Langfuse Integration Guide](https://modelscope.github.io/OpenJudge/integrations/langfuse/) |
+| | Other frameworks | 🔵 Planned | — |
+| **Training** | [verl](https://github.com/volcengine/verl) | 🟡 In Progress | — |
+| | [Trinity-RFT](https://github.com/modelscope/Trinity-RFT) | 🔵 Planned | — |
 
 > 💬 Have a framework you'd like us to prioritize? [Open an Issue](https://github.com/modelscope/OpenJudge/issues)!
-
-
 
 ---
 
