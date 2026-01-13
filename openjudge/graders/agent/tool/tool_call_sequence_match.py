@@ -53,7 +53,7 @@ class ToolCallSequenceMatchGrader(BaseGrader):
         Args:
             strict_mode: If True, matches both tool_call name and arguments; if False, only matches tool_call name
             use_jaccard_similarity: If True, use Jaccard similarity for loose mode (ignores step order)
-            metric_type: Metric type for step matching when use_jaccard_similarity=False.
+            metric_type: Metric type for step matching when use_jaccard_similarity=False and strict_mode=False.
                 - "recall": matched_count / reference_count (default)
                 - "precision": matched_count / predicted_count
             **kwargs: Additional arguments passed to BaseGrader
