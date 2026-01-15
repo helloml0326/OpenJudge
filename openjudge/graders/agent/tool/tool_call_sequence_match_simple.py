@@ -244,9 +244,7 @@ class ToolCallSequenceMatchSimpleGrader(BaseGrader):
 
             # Generate reason
             match_mode = "strict (name + arguments)" if self.match_arguments else "loose (name only)"
-            denominator = (
-                metrics['total_predicted'] if score_name == 'precision' else metrics['total_reference']
-            )
+            denominator = metrics["total_predicted"] if score_name == "precision" else metrics["total_reference"]
             reason = (
                 f"Tool call {score_name}: {score:.3f} "
                 f"({metrics['true_positives']}/{denominator}) "
