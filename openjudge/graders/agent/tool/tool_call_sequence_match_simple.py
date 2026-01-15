@@ -292,4 +292,3 @@ class ToolCallSequenceMatchSimpleGrader(BaseGrader):
                 "0.0": "No matches",
             },
         }
-
