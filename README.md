@@ -281,7 +281,7 @@ async def main():
     # 1️⃣ Configure generator
     config = IterativePointwiseRubricsGeneratorConfig(
         grader_name="customer_service_grader_v2", model=OpenAIChatModel(model="qwen3-max"),
-        min_score=1, max_score=5,  
+        min_score=1, max_score=5,
         enable_categorization=True, categories_number=5,  # Enable categorization, Aggregate into 5 themes
     )
     # 2️⃣ Generate grader from labeled data
