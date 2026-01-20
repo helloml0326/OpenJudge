@@ -244,7 +244,7 @@ async def main():
     hallucination_stats = analyzer.analyze(dataset, results["hallucination"])
     tool_selection_stats = analyzer.analyze(dataset, results["tool_selection"])
     overall_stats = analyzer.analyze(dataset, results["overall_score"])
-    
+
     print("\n" + "=" * 50)
     print("Evaluation Report")
     print("=" * 50)
@@ -254,7 +254,7 @@ async def main():
     print(f"{'Relevance':<20} | {relevance_stats.mean:>15.2f}")
     print(f"{'Hallucination':<20} | {hallucination_stats.mean:>15.2f}")
     print(f"{'Tool Selection':<20} | {tool_selection_stats.mean:>15.2f}")
-    
+
     print("\n" + "-" * 50)
     print("Per-case Scores:")
     for i, sample in enumerate(dataset):
