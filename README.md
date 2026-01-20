@@ -133,6 +133,7 @@ pip install py-openjudge
 ---
 
 ## 🚀 Quickstart
+> 📚 Complete Quickstart can be found in the [Quickstart Guide](https://agentscope-ai.github.io/OpenJudge/get_started/quickstart/).
 
 ### Simple Example
 
@@ -146,19 +147,15 @@ from openjudge.graders.common.relevance import RelevanceGrader
 async def main():
     # 1️⃣ Create model client
     model = OpenAIChatModel(model="qwen3-32b")
-
     # 2️⃣ Initialize grader
     grader = RelevanceGrader(model=model)
-
     # 3️⃣ Prepare data
     data = {
         "query": "What is machine learning?",
         "response": "Machine learning is a subset of AI that enables computers to learn from data.",
     }
-
     # 4️⃣ Evaluate
     result = await grader.aevaluate(**data)
-
     print(f"Score: {result.score}")   # Score: 4
     print(f"Reason: {result.reason}")
 
@@ -303,7 +300,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-> 📚 Complete Quickstart can be found in the [Quickstart Guide](https://agentscope-ai.github.io/OpenJudge/get_started/quickstart/).
+
 
 ---
 
