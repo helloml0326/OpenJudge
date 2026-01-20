@@ -33,11 +33,12 @@
 - [Community](#-community)
 - [Citation](#-citation)
 
-OpenJudge is an **open-source evaluation framework** for **AI applications** (e.g., AI agents or chatbots) to **evaluate quality** and, in turn, **optimize** your application.
+OpenJudge is an **open-source evaluation framework** for **AI applications** (e.g., AI agents or chatbots) designed to **evaluate quality** and  drive **continuous application optimization**.
 
-> In practice, application excellence depends on an evaluation workflow you can trust: collect test data → define graders → run evaluation at scale → analyze errors → iterate quickly.
+> In practice, application excellence depends on a trustworthy evaluation workflow: Collect test data → Define graders → Run evaluation at scale → Analyze weaknesses → Iterate quickly.
 
-OpenJudge provides **ready-to-use graders** and supports generating **scenario-specific rubrics (as graders)**, making this workflow **simpler**, **more professional**, and **easy to integrate** into your workflow. It can also convert grading results into **reward signals** to help you **fine-tune** and optimize your application.
+OpenJudge provides **ready-to-use graders** and supports generating **scenario-specific rubrics (as graders)**, making this workflow **simpler**, **more professional**, and **easy to integrate** into your workflow.
+It can also convert grading results into **reward signals** to help you **fine-tune** and optimize your application.
 
 ---
 
@@ -165,9 +166,11 @@ if __name__ == "__main__":
 
 ### Evaluate LLM Applications with Built-in Graders
 
-Use multiple built-in graders to comprehensively evaluate your LLM application:
+Use multiple built-in graders to comprehensively evaluate your LLM application: 👉  [Explore All built-in graders](https://agentscope-ai.github.io/OpenJudge/built_in_graders/overview/)
 
 > **Business Scenario:** Evaluating an e-commerce customer service agent that handles order inquiries. We assess the agent's performance across three dimensions: **relevance**, **hallucination**, and **tool selection**.
+
+
 
 ```python
 import asyncio
@@ -269,7 +272,7 @@ if __name__ == "__main__":
 
 #### Zero-shot Rubric Generation
 
-Generate a custom grader from task description without labeled data:
+Generate a custom grader from task description without labeled data: 👉 [Zero-shot Rubrics Generation Guide](https://agentscope-ai.github.io/OpenJudge/building_graders/generate_rubrics_as_graders/#simple-rubric-zero-shot-generation)
 
 **When to use:** Quick prototyping when you have no labeled data but can clearly describe your task.
 
@@ -317,7 +320,7 @@ if __name__ == "__main__":
 
 #### Data-driven Rubric Generation
 
-Learn evaluation criteria from labeled examples:
+Learn evaluation criteria from labeled examples: 👉 [Data-driven Rubrics Generation Guide](https://agentscope-ai.github.io/OpenJudge/building_graders/generate_rubrics_as_graders/#iterative-rubric-data-driven-generation)
 
 **When to use:** You have labeled data and need high-accuracy graders for production use, especially when evaluation criteria are implicit.
 
