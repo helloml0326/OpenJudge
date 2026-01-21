@@ -23,7 +23,7 @@ class MetricType(str, Enum):
     RECALL = "recall"
 
 
-class ToolCallSequenceMatchSimpleGrader(BaseGrader):
+class ToolCallPrecisionRecallMatchGrader(BaseGrader):
     """
     Simple tool call sequence matching grader.
 
@@ -39,7 +39,7 @@ class ToolCallSequenceMatchSimpleGrader(BaseGrader):
 
     Example:
         >>> import asyncio
-        >>> grader = ToolCallSequenceMatchSimpleGrader(metric_type="precision", match_arguments=True)
+        >>> grader = ToolCallPrecisionRecallMatchGrader(metric_type="precision", match_arguments=True)
         >>> result = asyncio.run(grader.aevaluate(
         ...     tool_calls=[{"name": "search", "arguments": {"query": "test"}}],
         ...     reference_tool_calls=[{"name": "search", "arguments": {"query": "test"}}]
@@ -293,3 +293,4 @@ class ToolCallSequenceMatchSimpleGrader(BaseGrader):
                 "0.0": "No matches",
             },
         }
+

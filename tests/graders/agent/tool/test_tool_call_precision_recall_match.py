@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-Test Tool Call Sequence Match Simple Grader
+Test Tool Call Precision Recall Match Grader
 
-Tests for the ToolCallSequenceMatchSimpleGrader class functionality.
+Tests for the ToolCallPrecisionRecallMatchGrader class functionality.
 """
 
 import pytest
 
-from openjudge.graders.agent.tool.tool_call_sequence_match_simple import (
+from openjudge.graders.agent.tool.tool_call_precision_recall_match import (
     MetricType,
-    ToolCallSequenceMatchSimpleGrader,
+    ToolCallPrecisionRecallMatchGrader,
 )
 
 
 def test_tool_call_sequence_match_simple_grader_creation():
-    """Test creating a ToolCallSequenceMatchSimpleGrader instance with default parameters."""
-    grader = ToolCallSequenceMatchSimpleGrader()
+    """Test creating a ToolCallPrecisionRecallMatchGrader instance with default parameters."""
+    grader = ToolCallPrecisionRecallMatchGrader()
 
     assert grader is not None
     assert grader.name == "tool_call_sequence_simple"
@@ -25,21 +25,21 @@ def test_tool_call_sequence_match_simple_grader_creation():
 
 def test_tool_call_sequence_match_simple_grader_precision_mode():
     """Test creating grader in precision mode."""
-    grader = ToolCallSequenceMatchSimpleGrader(metric_type="precision")
+    grader = ToolCallPrecisionRecallMatchGrader(metric_type="precision")
 
     assert grader.metric_type == MetricType.PRECISION
 
 
 def test_tool_call_sequence_match_simple_grader_recall_mode():
     """Test creating grader in recall mode."""
-    grader = ToolCallSequenceMatchSimpleGrader(metric_type="recall")
+    grader = ToolCallPrecisionRecallMatchGrader(metric_type="recall")
 
     assert grader.metric_type == MetricType.RECALL
 
 
 def test_tool_call_sequence_match_simple_grader_match_arguments():
     """Test creating grader with argument matching enabled."""
-    grader = ToolCallSequenceMatchSimpleGrader(match_arguments=True)
+    grader = ToolCallPrecisionRecallMatchGrader(match_arguments=True)
 
     assert grader.match_arguments is True
 
@@ -47,7 +47,7 @@ def test_tool_call_sequence_match_simple_grader_match_arguments():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_both_empty():
     """Test with both empty tool call lists."""
-    grader = ToolCallSequenceMatchSimpleGrader()
+    grader = ToolCallPrecisionRecallMatchGrader()
 
     result = await grader.aevaluate(tool_calls=[], reference_tool_calls=[])
 
@@ -58,7 +58,7 @@ async def test_tool_call_sequence_match_simple_grader_both_empty():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_empty_predictions():
     """Test with empty predictions but non-empty reference."""
-    grader = ToolCallSequenceMatchSimpleGrader(metric_type="recall")
+    grader = ToolCallPrecisionRecallMatchGrader(metric_type="recall")
 
     result = await grader.aevaluate(
         tool_calls=[],
@@ -71,7 +71,7 @@ async def test_tool_call_sequence_match_simple_grader_empty_predictions():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_empty_reference():
     """Test with non-empty predictions but empty reference."""
-    grader = ToolCallSequenceMatchSimpleGrader(metric_type="precision")
+    grader = ToolCallPrecisionRecallMatchGrader(metric_type="precision")
 
     result = await grader.aevaluate(
         tool_calls=[{"name": "search", "arguments": {}}],
@@ -84,7 +84,7 @@ async def test_tool_call_sequence_match_simple_grader_empty_reference():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_perfect_precision():
     """Test perfect precision - all predictions are correct."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=False,
     )
@@ -105,7 +105,7 @@ async def test_tool_call_sequence_match_simple_grader_perfect_precision():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_partial_precision():
     """Test partial precision - some predictions are wrong."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=False,
     )
@@ -127,7 +127,7 @@ async def test_tool_call_sequence_match_simple_grader_partial_precision():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_perfect_recall():
     """Test perfect recall - all references are found."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="recall",
         match_arguments=False,
     )
@@ -152,7 +152,7 @@ async def test_tool_call_sequence_match_simple_grader_perfect_recall():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_partial_recall():
     """Test partial recall - some references are missing."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="recall",
         match_arguments=False,
     )
@@ -174,7 +174,7 @@ async def test_tool_call_sequence_match_simple_grader_partial_recall():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_loose_matching():
     """Test loose matching ignores argument differences."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=False,
     )
@@ -191,7 +191,7 @@ async def test_tool_call_sequence_match_simple_grader_loose_matching():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_strict_matching_mismatch():
     """Test strict matching requires same arguments."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=True,
     )
@@ -208,7 +208,7 @@ async def test_tool_call_sequence_match_simple_grader_strict_matching_mismatch()
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_strict_matching_exact():
     """Test strict matching with same arguments."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=True,
     )
@@ -225,7 +225,7 @@ async def test_tool_call_sequence_match_simple_grader_strict_matching_exact():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_function_wrapper_format():
     """Test function wrapper format: {"function": {"name": ..., "arguments": ...}}"""
-    grader = ToolCallSequenceMatchSimpleGrader(match_arguments=False)
+    grader = ToolCallPrecisionRecallMatchGrader(match_arguments=False)
 
     result = await grader.aevaluate(
         tool_calls=[
@@ -240,7 +240,7 @@ async def test_tool_call_sequence_match_simple_grader_function_wrapper_format():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_tool_call_wrapper_format():
     """Test tool_call wrapper format: {"tool_call": {"function": {...}}}"""
-    grader = ToolCallSequenceMatchSimpleGrader(match_arguments=False)
+    grader = ToolCallPrecisionRecallMatchGrader(match_arguments=False)
 
     result = await grader.aevaluate(
         tool_calls=[
@@ -259,7 +259,7 @@ async def test_tool_call_sequence_match_simple_grader_tool_call_wrapper_format()
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_json_string_arguments():
     """Test arguments as JSON string."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=True,
     )
@@ -275,7 +275,7 @@ async def test_tool_call_sequence_match_simple_grader_json_string_arguments():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_duplicate_predictions():
     """Test handling duplicate predictions."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=False,
     )
@@ -296,7 +296,7 @@ async def test_tool_call_sequence_match_simple_grader_duplicate_predictions():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_duplicate_references():
     """Test handling duplicate references."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="recall",
         match_arguments=False,
     )
@@ -317,7 +317,7 @@ async def test_tool_call_sequence_match_simple_grader_duplicate_references():
 @pytest.mark.asyncio
 async def test_tool_call_sequence_match_simple_grader_metadata_fields():
     """Test that all expected metadata fields are present."""
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="precision",
         match_arguments=True,
     )
@@ -338,7 +338,7 @@ async def test_tool_call_sequence_match_simple_grader_metadata_fields():
 
 def test_tool_call_sequence_match_simple_grader_get_metadata():
     """Test that get_metadata returns a dictionary."""
-    metadata = ToolCallSequenceMatchSimpleGrader.get_metadata()
+    metadata = ToolCallPrecisionRecallMatchGrader.get_metadata()
 
     assert isinstance(metadata, dict)
     assert "description" in metadata

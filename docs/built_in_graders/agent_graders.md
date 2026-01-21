@@ -12,8 +12,8 @@ Evaluate AI agent behavior across actions, tools, memory, planning, reflection, 
 | | `ToolCallAccuracyGrader` | Evaluates tool call accuracy | LLM-Based | 1-5 | API-based assistants |
 | | `ToolCallSuccessGrader` | Checks technical execution success | LLM-Based | {0, 1} | Production agent monitoring |
 | | `ToolParameterCheckGrader` | Validates parameter correctness | LLM-Based | {0, 1} | Slot-filling dialogues |
-| | `ToolCallSequenceMatchGrader` | Multi-step tool sequence matching with step alignment | Code-Based | [0, 1] | Complex multi-turn agent benchmarks |
-| | `ToolCallSequenceMatchSimpleGrader` | Simple precision/recall for flat tool call lists | Code-Based | [0, 1] | Single-step tool call evaluation |
+| | `ToolCallStepSequenceMatchGrader` | Multi-step tool sequence matching with step alignment | Code-Based | [0, 1] | Complex multi-turn agent benchmarks |
+| | `ToolCallPrecisionRecallMatchGrader` | Simple precision/recall for flat tool call lists | Code-Based | [0, 1] | Single-step tool call evaluation |
 | **Memory** | `MemoryAccuracyGrader` | Validates memory factuality | LLM-Based | {0, 1} | Memory-augmented agents |
 | | `MemoryDetailPreservationGrader` | Checks detail retention | LLM-Based | {0, 1} | Long-horizon tasks |
 | | `MemoryRetrievalEffectivenessGrader` | Assesses memory retrieval | LLM-Based | {0, 1} | RAG-based agents |
@@ -445,7 +445,7 @@ Score: 1.0
 Reason: The tool call correctly extracted all required parameters from the user query. The 'pattern' parameter was set to '*.py', which accurately reflects the intent to search for Python files. The 'directory' parameter was set to 'src', matching the specified directory in the query. Both parameters are present, grounded in the query, and formatted correctly as strings. There are no hallucinations or missing parameters, and the data types align with the tool's definition. The tool call is fully executable with correct parameters.
 ```
 
-### ToolCallSequenceMatchGrader
+### ToolCallStepSequenceMatchGrader
 
 Evaluates multi-step tool call sequences with step-by-step alignment against reference sequences. Designed for complex multi-turn agent scenarios where tool calls are organized by steps (turns).
 
@@ -476,10 +476,10 @@ Evaluates multi-step tool call sequences with step-by-step alignment against ref
 
 ```python
 import asyncio
-from openjudge.graders.agent import ToolCallSequenceMatchGrader
+from openjudge.graders.agent import ToolCallStepSequenceMatchGrader
 
 async def main():
-    grader = ToolCallSequenceMatchGrader(
+    grader = ToolCallStepSequenceMatchGrader(
         strict_mode=True,
         use_jaccard_similarity=True
     )
@@ -515,7 +515,7 @@ Score: 1.0
 Reason: Tool call sequence evaluation (strict mode, jaccard): jaccard_similarity=1.000
 ```
 
-### ToolCallSequenceMatchSimpleGrader
+### ToolCallPrecisionRecallMatchGrader
 
 Computes precision or recall metrics for tool calls against reference.
 
@@ -545,11 +545,11 @@ Computes precision or recall metrics for tool calls against reference.
 
 ```python
 import asyncio
-from openjudge.graders.agent import ToolCallSequenceMatchSimpleGrader
+from openjudge.graders.agent import ToolCallPrecisionRecallMatchGrader
 
 async def main():
     # Compute recall with loose matching (name only)
-    grader = ToolCallSequenceMatchSimpleGrader(
+    grader = ToolCallPrecisionRecallMatchGrader(
         metric_type="recall",
         match_arguments=False
     )
@@ -589,7 +589,7 @@ Recall: 0.6666666666666666
 
 ```python
 # Compute precision with strict matching (name + arguments)
-grader = ToolCallSequenceMatchSimpleGrader(
+grader = ToolCallPrecisionRecallMatchGrader(
     metric_type="precision",
     match_arguments=True
 )
