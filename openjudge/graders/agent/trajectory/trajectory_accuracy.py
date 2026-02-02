@@ -222,9 +222,7 @@ class TrajectoryAccuracyGrader(LLMGrader):
                 content_str = content
             elif isinstance(content, list):
                 # Handle multimodal content
-                text_parts = [
-                    item.get("text", "") for item in content if item.get("type") == "text"
-                ]
+                text_parts = [item.get("text", "") for item in content if item.get("type") == "text"]
                 content_str = " ".join(text_parts) if text_parts else ""
             else:
                 content_str = str(content)
@@ -322,4 +320,3 @@ __all__ = [
     "TrajectoryAccuracyGrader",
     "DEFAULT_TRAJECTORY_ACCURACY_TEMPLATE",
 ]
-

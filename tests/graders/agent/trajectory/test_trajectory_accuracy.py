@@ -23,21 +23,18 @@ Example:
     ```bash
     pytest tests/graders/agent/trajectory/test_trajectory_accuracy.py -m quality -s
     ```
-    
+
     Note: Use `-s` flag to see print output (evaluation summaries, etc.)
 """
 
-import json
 import os
-import sys
-from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 import pytest
 
 from openjudge.analyzer.statistical import ConsistencyAnalyzer
 from openjudge.analyzer.validation import AccuracyAnalyzer
-from openjudge.graders.agent.trajectory import TrajectoryAccuracyGrader
+from openjudge.graders.agent.trajectory.trajectory_accuracy import TrajectoryAccuracyGrader
 from openjudge.graders.base_grader import GraderError
 from openjudge.models.openai_chat_model import OpenAIChatModel
 from openjudge.models.schema.prompt_template import LanguageEnum
@@ -152,7 +149,7 @@ class TestTrajectoryAccuracyGraderUnit:
                     "tool_calls": [
                         {
                             "id": "call_2",
-                            "function": {"name": "get_time", "arguments": '{}'},
+                            "function": {"name": "get_time", "arguments": "{}"},
                             "type": "function",
                         }
                     ],
@@ -200,7 +197,7 @@ class TestTrajectoryAccuracyGraderUnit:
                     "tool_calls": [
                         {
                             "id": "call_1",
-                            "function": {"name": "get_time", "arguments": '{}'},
+                            "function": {"name": "get_time", "arguments": "{}"},
                             "type": "function",
                         }
                     ],
@@ -299,7 +296,10 @@ class TestTrajectoryAccuracyGraderQuality:
                         "tool_calls": [
                             {
                                 "id": "call_1",
-                                "function": {"name": "convert_currency", "arguments": '{"amount": 100, "from": "USD", "to": "GBP"}'},
+                                "function": {
+                                    "name": "convert_currency",
+                                    "arguments": '{"amount": 100, "from": "USD", "to": "GBP"}',
+                                },
                                 "type": "function",
                             }
                         ],
@@ -328,7 +328,10 @@ class TestTrajectoryAccuracyGraderQuality:
                         "name": "search",
                         "content": '[{"title": "Python Basics", "url": "https://example.com/python"}]',
                     },
-                    {"role": "assistant", "content": "I found Python tutorials. Here's one: Python Basics at https://example.com/python"},
+                    {
+                        "role": "assistant",
+                        "content": "I found Python tutorials. Here's one: Python Basics at https://example.com/python",
+                    },
                 ],
                 "human_score": 3.0,
             },
@@ -354,7 +357,7 @@ class TestTrajectoryAccuracyGraderQuality:
                         "tool_calls": [
                             {
                                 "id": "call_2",
-                                "function": {"name": "get_time", "arguments": '{}'},
+                                "function": {"name": "get_time", "arguments": "{}"},
                                 "type": "function",
                             }
                         ],
@@ -373,7 +376,10 @@ class TestTrajectoryAccuracyGraderQuality:
                         "tool_calls": [
                             {
                                 "id": "call_1",
-                                "function": {"name": "convert_currency", "arguments": '{"amount": 100, "from": "USD", "to": "GBP"}'},
+                                "function": {
+                                    "name": "convert_currency",
+                                    "arguments": '{"amount": 100, "from": "USD", "to": "GBP"}',
+                                },
                                 "type": "function",
                             }
                         ],
@@ -385,7 +391,10 @@ class TestTrajectoryAccuracyGraderQuality:
                         "tool_calls": [
                             {
                                 "id": "call_2",
-                                "function": {"name": "get_exchange_rate_history", "arguments": '{"from": "USD", "to": "GBP"}'},
+                                "function": {
+                                    "name": "get_exchange_rate_history",
+                                    "arguments": '{"from": "USD", "to": "GBP"}',
+                                },
                                 "type": "function",
                             }
                         ],
@@ -405,7 +414,7 @@ class TestTrajectoryAccuracyGraderQuality:
                         "tool_calls": [
                             {
                                 "id": "call_1",
-                                "function": {"name": "get_time", "arguments": '{}'},
+                                "function": {"name": "get_time", "arguments": "{}"},
                                 "type": "function",
                             }
                         ],
@@ -546,4 +555,3 @@ class TestTrajectoryAccuracyGraderQuality:
         # Verify metadata
         assert "explanation" in consistency_result.metadata
         assert consistency_result.name == "Consistency Analysis"
-
