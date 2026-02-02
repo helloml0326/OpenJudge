@@ -212,7 +212,7 @@ class TrajectoryAccuracyGrader(LLMGrader):
         messages = [msg.get("message", msg) for msg in messages]
 
         formatted_parts = []
-        for i, msg in enumerate(messages):
+        for _, msg in enumerate(messages):
             role = msg.get("role", "unknown")
             content = msg.get("content", "")
             tool_calls = msg.get("tool_calls", [])
