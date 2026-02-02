@@ -33,3 +33,4 @@ from .tool.tool_selection import ToolSelectionGrader
 
 # Trajectory graders
 from .trajectory.trajectory_comprehensive import TrajectoryComprehensiveGrader
+from .trajectory.trajectory_accuracy import TrajectoryAccuracyGrader
