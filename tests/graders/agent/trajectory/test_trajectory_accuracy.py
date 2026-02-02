@@ -34,7 +34,9 @@ import pytest
 
 from openjudge.analyzer.statistical import ConsistencyAnalyzer
 from openjudge.analyzer.validation import AccuracyAnalyzer
-from openjudge.graders.agent.trajectory.trajectory_accuracy import TrajectoryAccuracyGrader
+from openjudge.graders.agent.trajectory.trajectory_accuracy import (
+    TrajectoryAccuracyGrader,
+)
 from openjudge.graders.base_grader import GraderError
 from openjudge.models.openai_chat_model import OpenAIChatModel
 from openjudge.models.schema.prompt_template import LanguageEnum
