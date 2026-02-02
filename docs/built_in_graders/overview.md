@@ -87,6 +87,7 @@ Comprehensive evaluation for AI agents across the entire lifecycle. [→ Detaile
 
 | Grader | Description | Type | Score Range |
 |--------|-------------|------|-------------|
+| `TrajectoryAccuracyGrader` | Evaluates trajectory accuracy in solving user queries | LLM-Based | 1-3 |
 | `TrajectoryComprehensiveGrader` | Comprehensive trajectory evaluation | LLM-Based | {0, 1} |
 
 

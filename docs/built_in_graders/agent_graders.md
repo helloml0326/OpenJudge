@@ -22,7 +22,8 @@ Evaluate AI agent behavior across actions, tools, memory, planning, reflection, 
 | | `ReflectionOutcomeUnderstandingGrader` | Checks outcome understanding | LLM-Based | {0, 1} | Error recovery scenarios |
 | | `ReflectionProgressAwarenessGrader` | Assesses progress awareness | LLM-Based | {0, 1} | Goal-tracking agents |
 | **Observation** | `ObservationInformationGainGrader` | Measures information gain | Code-Based | [0, 1] | Exploration efficiency |
-| **Trajectory** | `TrajectoryComprehensiveGrader` | Comprehensive trajectory evaluation | LLM-Based | [0, 1] | End-to-end agent testing |
+| **Trajectory** | `TrajectoryAccuracyGrader` | Evaluates trajectory accuracy | LLM-Based | 1-3 | Goal achievement assessment |
+| | `TrajectoryComprehensiveGrader` | Comprehensive trajectory evaluation | LLM-Based | [0, 1] | End-to-end agent testing |
 
 ## Performance
 
@@ -1060,6 +1061,63 @@ Each turn similarity: [0.0, 0.42857142857142855]
 
 
 ## Trajectory Graders
+
+### TrajectoryAccuracyGrader
+
+Evaluates the accuracy of agent trajectories in solving user queries.
+
+**Use this grader for:**
+
+- Assessing whether agent trajectories achieve user goals
+- Evaluating logical flow and efficiency of action sequences
+- Quick trajectory quality assessment with simple 1-3 scoring
+
+**Evaluation criteria:** Logical coherence between steps, goal progression, and efficiency (not unnecessarily inefficient).
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `messages` | List[Dict[str, Any]] | Yes | List of messages in OpenAI format representing the conversation trajectory |
+
+**Scoring:**
+- `3`: Successfully achieves the task goal without any steps unrelated to the task (reasonable extensions to improve task quality are acceptable)
+- `2`: Successfully achieves the task goal, but contains obvious unnecessary steps unrelated to the task
+- `1`: Fails to achieve the task goal
+
+**Example:**
+
+```python
+import asyncio
+from openjudge.models import OpenAIChatModel
+from openjudge.graders.agent import TrajectoryAccuracyGrader
+
+async def main():
+    model = OpenAIChatModel(model="qwen3-32b")
+    grader = TrajectoryAccuracyGrader(model=model)
+
+    messages = [
+        {"role": "user", "content": "What's the weather like in New York?"},
+        {"role": "assistant", "content": "I'll check the weather for you.",
+         "tool_calls": [{"id": "1", "function": {"name": "get_weather", "arguments": '{"location": "New York"}'}}]},
+        {"role": "tool", "tool_call_id": "1", "content": "Sunny, 72°F"},
+        {"role": "assistant", "content": "The weather in New York is sunny, 72°F."}
+    ]
+
+    result = await grader.aevaluate(messages=messages)
+
+    print(f"Score: {result.score}")   # 3.0 - goal achieved efficiently
+    print(f"Reason: {result.reason}")
+
+asyncio.run(main())
+```
+
+**Output:**
+
+```
+Score: 3.0
+Reason: The trajectory successfully achieves the task goal of providing weather information for New York. The agent directly called the appropriate weather tool with the correct location parameter, received the result, and presented it clearly to the user. There are no unnecessary steps or actions unrelated to the task.
+```
 
 ### TrajectoryComprehensiveGrader
 
