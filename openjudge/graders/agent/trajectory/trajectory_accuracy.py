@@ -21,37 +21,42 @@ from openjudge.models.schema.prompt_template import LanguageEnum, PromptTemplate
 
 # English Prompt
 TRAJECTORY_ACCURACY_PROMPT_EN = textwrap.dedent(
-    """# Instruction
-## Goal
+    """
 You are a professional data labeling expert specializing in trajectory evaluation. \
 Your goal is to assess the accuracy of an AI agent's internal trajectory based on the \
 provided conversation data.
-
-# Definition
 **Trajectory Accuracy** refers to the overall correctness and effectiveness of an agent's \
 trajectory (sequence of actions, tool calls, and responses) in achieving the user's goal.
 
-# EVALUATION CRITERIA
+<Rubrics>
 Evaluate based on these factors:
 1. **Logical Coherence**: Does the trajectory maintain logical coherence between consecutive steps?
 2. **Goal Progression**: Does the trajectory show clear progression toward the objective?
 3. **Efficiency**: Is the trajectory reasonably efficient (perfection is not required, but it \
     should not be unnecessarily inefficient)?
+</Rubrics>
 
-# Ratings
-- Score 3: Successfully achieves the task goal without any steps unrelated to the task \
+<Steps>
+First, identify the goal of the trajectory by examining the input (if the input is not explicitly \
+provided, infer it from the content of the first message), as well as the output of the final message. \
+Once you understand the goal, evaluate the trajectory based on how effectively it achieves that goal.
+</Steps>
+
+
+<Scale>
+- Score 3: Successfully achieves the task goal without any steps totally unrelated to the task \
     (reasonable extensions to improve task quality are acceptable).
 - Score 2: Successfully achieves the task goal, but contains obvious unnecessary steps \
     unrelated to the task.
 - Score 1: Fails to achieve the task goal.
+</Scale>
 
-# Data
+
+<trajectory>
 TRAJECTORY: {messages}
+</trajectory>
 
-# Tasks
-First, identify the goal of the trajectory by examining the input (if the input is not explicitly \
-provided, infer it from the content of the first message), as well as the output of the final message. \
-Once you understand the goal, evaluate the trajectory based on how effectively it achieves that goal.
+<Output Schema>
 Your output should be a JSON object with the following format:
 ```json
 {{
@@ -59,41 +64,52 @@ Your output should be a JSON object with the following format:
     "reason": [Reason for the score],
 }}
 ```
+</Output Schema>
+JSON:
 """
 ).strip()
 
 # Chinese Prompt
 TRAJECTORY_ACCURACY_PROMPT_ZH = textwrap.dedent(
-    """# 指令
-## 目标
-你是一位专业的数据标注专家，专门从事轨迹评估工作。你的目标是基于提供的对话数据，评估AI智能体内部轨迹的准确性。
+    """
+你是一位专业的数据标注专家，专注于轨迹评估。\
+你的目标是根据提供的对话数据，评估AI智能体内部轨迹的准确性。
+**轨迹准确性**是指智能体的轨迹（动作序列、工具调用和响应）在实现用户目标方面的整体正确性和有效性。
 
-# 定义
-**轨迹准确性**是指智能体轨迹（包括动作序列、工具调用和响应）在达成用户目标时的整体正确性和有效性。
-
-# 评估标准
-基于以下因素进行评估：
+<评估标准>
+根据以下因素进行评估：
 1. **逻辑连贯性**：轨迹在连续步骤之间是否保持逻辑连贯？
-2. **目标推进**：轨迹是否展示了朝着目标清晰推进的过程？
-3. **效率**：轨迹是否合理高效（不需要完美，但不应不必要地低效）？
+2. **目标推进**：轨迹是否显示出朝向目标的清晰进展？
+3. **效率**：轨迹是否合理高效（不要求完美，但不应存在不必要的低效）？
+</评估标准>
 
-# 评分
-- 分数 3：成功实现任务目标，且不存在与任务无关的步骤（为提升任务质量所做的合理扩展除外）。
-- 分数 2：成功实现任务目标，但包含明显与任务无关的多余步骤。
-- 分数 1：未能实现任务目标。
+<评估步骤>
+首先，通过检查输入（如果输入未明确提供，则从第一条消息的内容中推断）以及最终消息的输出来\
+确定轨迹的目标。一旦理解了目标，就根据轨迹实现该目标的有效程度进行评估。
+</评估步骤>
 
-# 数据
-轨迹：{messages}
 
-# 任务
-首先，通过检查输入来理解轨迹的目标（如果输入没有明确提供，请从第一条消息的内容中推断），同时查看最后一条消息的输出。一旦理解了目标，请根据轨迹达成该目标的有效性来评估它。
-你的输出应该是具有以下格式的 JSON 对象：
+<评分标准>
+- 3分：成功实现任务目标，且没有任何与任务完全无关的步骤（为提高任务质量而进行的合理扩展是可以接受的）。
+- 2分：成功实现任务目标，但包含明显与任务明显无关的不必要步骤。
+- 1分：未能实现任务目标。
+</评分标准>
+
+
+<轨迹>
+轨迹内容：{messages}
+</轨迹>
+
+<输出格式>
+你的输出应该是一个JSON对象，格式如下：
 ```json
 {{
-    "score": [轨迹准确性分数],
-    "reason": [分数的原因],
+    "score": [轨迹准确性评分],
+    "reason": [评分原因],
 }}
 ```
+</输出格式>
+JSON:
 """
 ).strip()
 
