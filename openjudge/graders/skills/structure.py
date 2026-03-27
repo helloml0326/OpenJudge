@@ -244,11 +244,19 @@ DEFAULT_SKILL_STRUCTURE_TEMPLATE = PromptTemplate(
     messages={
         LanguageEnum.EN: [
             ChatMessage(
+                role="system",
+                content=LLMGrader.SYSTEM_PROMPT_EN,
+            ),
+            ChatMessage(
                 role="user",
                 content=SKILL_STRUCTURE_PROMPT_EN,
             ),
         ],
         LanguageEnum.ZH: [
+            ChatMessage(
+                role="system",
+                content=LLMGrader.SYSTEM_PROMPT_ZH,
+            ),
             ChatMessage(
                 role="user",
                 content=SKILL_STRUCTURE_PROMPT_ZH,

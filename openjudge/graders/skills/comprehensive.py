@@ -391,11 +391,19 @@ DEFAULT_SKILL_COMPREHENSIVE_TEMPLATE = PromptTemplate(
     messages={
         LanguageEnum.EN: [
             ChatMessage(
+                role="system",
+                content=LLMGrader.SYSTEM_PROMPT_EN,
+            ),
+            ChatMessage(
                 role="user",
                 content=SKILL_COMPREHENSIVE_PROMPT_EN,
             ),
         ],
         LanguageEnum.ZH: [
+            ChatMessage(
+                role="system",
+                content=LLMGrader.SYSTEM_PROMPT_ZH,
+            ),
             ChatMessage(
                 role="user",
                 content=SKILL_COMPREHENSIVE_PROMPT_ZH,
