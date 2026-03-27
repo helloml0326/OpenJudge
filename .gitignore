@@ -38,6 +38,7 @@ local/
 
 # Test Artifacts
 tests/plt_*
+tests/graders/skills/*.json
 
 # Security Files
 *.pem

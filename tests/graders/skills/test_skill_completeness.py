@@ -141,7 +141,11 @@ class TestSkillCompletenessGraderUnit:
             )
 
         assert result.score == 3
-        assert "step" in result.reason.lower() or "prerequisite" in result.reason.lower() or "output" in result.reason.lower()
+        assert (
+            "step" in result.reason.lower()
+            or "prerequisite" in result.reason.lower()
+            or "output" in result.reason.lower()
+        )
         assert result.metadata["threshold"] == 2
 
     # ------------------------------------------------------------------
@@ -176,9 +180,7 @@ class TestSkillCompletenessGraderUnit:
                     "and security vulnerabilities. Provide structured feedback."
                 ),
                 skill_name="code-review",
-                skill_description=(
-                    "Use this skill to review code changes for quality issues."
-                ),
+                skill_description=("Use this skill to review code changes for quality issues."),
                 skill_md=(
                     "# Code Review Skill\n\n"
                     "## What to Check\n"
@@ -220,9 +222,7 @@ class TestSkillCompletenessGraderUnit:
             grader.model.achat = mock_achat
 
             result = await grader.aevaluate(
-                task_description=(
-                    "Review a GitHub Pull Request for code quality, bugs, and security issues."
-                ),
+                task_description=("Review a GitHub Pull Request for code quality, bugs, and security issues."),
                 skill_name="code-review",
                 skill_description="Use this skill to review code for correctness and maintainability.",
                 skill_md="# Code Review Skill\n\nReview the code and provide feedback on quality, bugs, and security.",
@@ -418,10 +418,7 @@ def _load_dataset(skill_group: str | None = None):
         cases = json.load(f)
 
     if skill_group is not None:
-        cases = [
-            c for c in cases
-            if c.get("skill_group", "code-review") == skill_group
-        ]
+        cases = [c for c in cases if c.get("skill_group", "code-review") == skill_group]
     return cases
 
 
@@ -492,13 +489,9 @@ class TestSkillCompletenessGraderQuality:
             desc = case["description"]
 
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}")
 
         assert not violations, "Score bound violations:\n" + "\n".join(violations)
 
@@ -518,9 +511,9 @@ class TestSkillCompletenessGraderQuality:
 
         print(f"\nAll cases — avg complete: {avg_complete:.2f}, avg incomplete: {avg_incomplete:.2f}")
 
-        assert avg_complete > avg_incomplete, (
-            f"Complete avg ({avg_complete:.2f}) should exceed incomplete avg ({avg_incomplete:.2f})"
-        )
+        assert (
+            avg_complete > avg_incomplete
+        ), f"Complete avg ({avg_complete:.2f}) should exceed incomplete avg ({avg_incomplete:.2f})"
 
     @pytest.mark.asyncio
     async def test_consistency_across_runs(self, dataset, model):
@@ -542,10 +535,7 @@ class TestSkillCompletenessGraderQuality:
         def _has_score(r) -> bool:
             return r is not None and hasattr(r, "score") and r.score is not None
 
-        agreements = sum(
-            1 for r1, r2 in zip(run1, run2)
-            if _has_score(r1) and _has_score(r2) and r1.score == r2.score
-        )
+        agreements = sum(1 for r1, r2 in zip(run1, run2) if _has_score(r1) and _has_score(r2) and r1.score == r2.score)
         total = len([r for r in run1 if _has_score(r)])
         consistency = agreements / total if total > 0 else 1.0
 
@@ -589,13 +579,9 @@ class TestSkillCompletenessCodeReviewGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
         assert not violations, "code-review score bound violations:\n" + "\n".join(violations)
 
@@ -627,8 +613,7 @@ class TestSkillCompletenessCodeReviewGroup:
         results = await _run_grader(grader, [empty_case])
 
         assert results[0].score == 1, (
-            f"Empty SKILL.md should score 1 (incomplete), "
-            f"got {results[0].score}: {results[0].reason}"
+            f"Empty SKILL.md should score 1 (incomplete), " f"got {results[0].score}: {results[0].reason}"
         )
 
     @pytest.mark.asyncio
@@ -713,17 +698,11 @@ class TestSkillCompletenessFinancialConsultingGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
-        assert not violations, (
-            "financial-consulting-research score bound violations:\n" + "\n".join(violations)
-        )
+        assert not violations, "financial-consulting-research score bound violations:\n" + "\n".join(violations)
 
     @pytest.mark.asyncio
     async def test_complete_beats_incomplete_financial_consulting(self, dataset, model):
@@ -743,9 +722,9 @@ class TestSkillCompletenessFinancialConsultingGroup:
             f"\nfinancial-consulting-research — avg complete: {avg_complete:.2f}, "
             f"avg incomplete: {avg_incomplete:.2f}"
         )
-        assert avg_complete > avg_incomplete, (
-            f"Complete avg ({avg_complete:.2f}) should exceed incomplete avg ({avg_incomplete:.2f})"
-        )
+        assert (
+            avg_complete > avg_incomplete
+        ), f"Complete avg ({avg_complete:.2f}) should exceed incomplete avg ({avg_incomplete:.2f})"
 
     @pytest.mark.asyncio
     async def test_empty_skill_md_scores_1_financial(self, dataset, model):
@@ -758,8 +737,7 @@ class TestSkillCompletenessFinancialConsultingGroup:
         results = await _run_grader(grader, [empty_case])
 
         assert results[0].score == 1, (
-            f"Empty SKILL.md should score 1 (incomplete), "
-            f"got {results[0].score}: {results[0].reason}"
+            f"Empty SKILL.md should score 1 (incomplete), " f"got {results[0].score}: {results[0].reason}"
         )
 
     @pytest.mark.asyncio

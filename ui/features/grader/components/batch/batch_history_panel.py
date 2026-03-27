@@ -323,6 +323,11 @@ def render_batch_task_detail(
     config = details.get("config", {})
     summary = details.get("summary", {})
 
+    grader_name = (
+        config.get("grader_name_zh", config.get("grader_name", "Unknown"))
+        if get_ui_language() == "zh"
+        else config.get("grader_name", "Unknown")
+    )
     st.markdown(
         f"""<div style="
             background: rgba(30, 41, 59, 0.5);
@@ -334,11 +339,7 @@ def render_batch_task_detail(
                 Task: {task_id}
             </div>
             <div style="font-size: 0.85rem; color: #94A3B8;">
-                Grader: {
-                    config.get('grader_name_zh', config.get('grader_name', 'Unknown'))
-                    if get_ui_language() == "zh"
-                    else config.get('grader_name', 'Unknown')
-                }
+                Grader: {grader_name}
             </div>
             <div style="font-size: 0.85rem; color: #94A3B8;">
                 Created: {config.get('created_at', 'Unknown')}

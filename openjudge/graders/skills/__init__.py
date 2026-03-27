@@ -14,7 +14,9 @@ This module contains graders for evaluating AI Agent Skill packages:
 
 from openjudge.graders.skills.completeness import SkillCompletenessGrader
 from openjudge.graders.skills.comprehensive import SkillComprehensiveGrader
-from openjudge.graders.skills.comprehensive_pairwise import SkillComprehensivePairwiseGrader
+from openjudge.graders.skills.comprehensive_pairwise import (
+    SkillComprehensivePairwiseGrader,
+)
 from openjudge.graders.skills.relevance import SkillRelevanceGrader
 from openjudge.graders.skills.safety import SkillSafetyGrader
 from openjudge.graders.skills.structure import SkillStructureGrader

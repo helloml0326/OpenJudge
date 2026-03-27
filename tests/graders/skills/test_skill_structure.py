@@ -198,8 +198,7 @@ class TestSkillStructureGraderUnit:
             result = await grader.aevaluate(
                 skill_name="code-review",
                 skill_description=(
-                    "Reviews code diffs and Pull Requests for bugs, security issues, "
-                    "and maintainability problems."
+                    "Reviews code diffs and Pull Requests for bugs, security issues, " "and maintainability problems."
                 ),
                 skill_md=(
                     "---\nname: code-review\ndescription: Reviews code.\n---\n\n"
@@ -253,8 +252,7 @@ class TestSkillStructureGraderUnit:
                 skill_name="code-review",
                 skill_description="A skill for reviewing code.",
                 skill_md=(
-                    "# Code Review Skill\n\n"
-                    "Review the code and provide feedback. Check for bugs and style problems."
+                    "# Code Review Skill\n\n" "Review the code and provide feedback. Check for bugs and style problems."
                 ),
             )
 
@@ -459,10 +457,7 @@ def _load_dataset(skill_group: str | None = None):
         cases = json.load(f)
 
     if skill_group is not None:
-        cases = [
-            c for c in cases
-            if c.get("skill_group", "code-review") == skill_group
-        ]
+        cases = [c for c in cases if c.get("skill_group", "code-review") == skill_group]
     return cases
 
 
@@ -534,13 +529,9 @@ class TestSkillStructureGraderQuality:
             desc = case["description"]
 
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}")
 
         assert not violations, "Score bound violations:\n" + "\n".join(violations)
 
@@ -560,9 +551,7 @@ class TestSkillStructureGraderQuality:
 
         print(f"\nAll cases — avg sound: {avg_sound:.2f}, avg poor: {avg_poor:.2f}")
 
-        assert avg_sound > avg_poor, (
-            f"Structurally sound avg ({avg_sound:.2f}) should exceed poor avg ({avg_poor:.2f})"
-        )
+        assert avg_sound > avg_poor, f"Structurally sound avg ({avg_sound:.2f}) should exceed poor avg ({avg_poor:.2f})"
 
     @pytest.mark.asyncio
     async def test_consistency_across_runs(self, dataset, model):
@@ -584,10 +573,7 @@ class TestSkillStructureGraderQuality:
         def _has_score(r) -> bool:
             return r is not None and hasattr(r, "score") and r.score is not None
 
-        agreements = sum(
-            1 for r1, r2 in zip(run1, run2)
-            if _has_score(r1) and _has_score(r2) and r1.score == r2.score
-        )
+        agreements = sum(1 for r1, r2 in zip(run1, run2) if _has_score(r1) and _has_score(r2) and r1.score == r2.score)
         total = len([r for r in run1 if _has_score(r)])
         consistency = agreements / total if total > 0 else 1.0
 
@@ -636,13 +622,9 @@ class TestSkillStructureCodeReviewGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
         assert not violations, "code-review score bound violations:\n" + "\n".join(violations)
 
@@ -831,17 +813,11 @@ class TestSkillStructureFinancialConsultingGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
-        assert not violations, (
-            "financial-consulting-research score bound violations:\n" + "\n".join(violations)
-        )
+        assert not violations, "financial-consulting-research score bound violations:\n" + "\n".join(violations)
 
     @pytest.mark.asyncio
     async def test_sound_beats_poor_financial_consulting(self, dataset, model):
@@ -857,13 +833,8 @@ class TestSkillStructureFinancialConsultingGroup:
         avg_sound = sum(r.score for r in sound_results) / len(sound_results)
         avg_poor = sum(r.score for r in poor_results) / len(poor_results)
 
-        print(
-            f"\nfinancial-consulting-research — avg sound: {avg_sound:.2f}, "
-            f"avg poor: {avg_poor:.2f}"
-        )
-        assert avg_sound > avg_poor, (
-            f"Sound avg ({avg_sound:.2f}) should exceed poor avg ({avg_poor:.2f})"
-        )
+        print(f"\nfinancial-consulting-research — avg sound: {avg_sound:.2f}, " f"avg poor: {avg_poor:.2f}")
+        assert avg_sound > avg_poor, f"Sound avg ({avg_sound:.2f}) should exceed poor avg ({avg_poor:.2f})"
 
     @pytest.mark.asyncio
     async def test_expert_never_list_with_mandatory_trigger_scores_high(self, dataset, model):

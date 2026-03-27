@@ -117,8 +117,7 @@ class TestSkillRelevanceGraderUnit:
 
             result = await grader.aevaluate(
                 task_description=(
-                    "Review a GitHub Pull Request for code quality issues, bugs, "
-                    "and security vulnerabilities."
+                    "Review a GitHub Pull Request for code quality issues, bugs, " "and security vulnerabilities."
                 ),
                 skill_name="code-review",
                 skill_description=(
@@ -169,10 +168,7 @@ class TestSkillRelevanceGraderUnit:
                     "Use this skill to review code for correctness, security, "
                     "maintainability, and project standards."
                 ),
-                skill_md=(
-                    "# Code Review Skill\n"
-                    "## Security\n- Check for SQL injection, XSS, hardcoded secrets."
-                ),
+                skill_md=("# Code Review Skill\n" "## Security\n- Check for SQL injection, XSS, hardcoded secrets."),
             )
 
         assert result.score == 2
@@ -325,10 +321,7 @@ def _load_dataset(skill_group: str | None = None):
         cases = json.load(f)
 
     if skill_group is not None:
-        cases = [
-            c for c in cases
-            if c.get("skill_group", "code-review") == skill_group
-        ]
+        cases = [c for c in cases if c.get("skill_group", "code-review") == skill_group]
     return cases
 
 
@@ -400,13 +393,9 @@ class TestSkillRelevanceGraderQuality:
             desc = case["description"]
 
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}")
 
         assert not violations, "Score bound violations:\n" + "\n".join(violations)
 
@@ -426,9 +415,9 @@ class TestSkillRelevanceGraderQuality:
 
         print(f"\nAll skills — avg direct: {avg_direct:.2f}, avg poor: {avg_poor:.2f}")
 
-        assert avg_direct > avg_poor, (
-            f"Direct-match avg ({avg_direct:.2f}) should exceed poor-match avg ({avg_poor:.2f})"
-        )
+        assert (
+            avg_direct > avg_poor
+        ), f"Direct-match avg ({avg_direct:.2f}) should exceed poor-match avg ({avg_poor:.2f})"
 
     @pytest.mark.asyncio
     async def test_consistency_across_runs(self, dataset, model):
@@ -446,9 +435,7 @@ class TestSkillRelevanceGraderQuality:
 
         run1 = cast(List[GraderScore], results["run1"])
         run2 = cast(List[GraderScore], results["run2"])
-        agreements = sum(
-            1 for r1, r2 in zip(run1, run2) if r1 and r2 and r1.score == r2.score
-        )
+        agreements = sum(1 for r1, r2 in zip(run1, run2) if r1 and r2 and r1.score == r2.score)
         total = len([r for r in run1 if r and r.score is not None])
         consistency = agreements / total if total > 0 else 1.0
 
@@ -484,13 +471,9 @@ class TestSkillRelevanceCodeReviewGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
         assert not violations, "code-review score bound violations:\n" + "\n".join(violations)
 
@@ -560,17 +543,11 @@ class TestSkillRelevanceFinancialConsultingGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
-        assert not violations, (
-            "financial-consulting-research score bound violations:\n" + "\n".join(violations)
-        )
+        assert not violations, "financial-consulting-research score bound violations:\n" + "\n".join(violations)
 
     @pytest.mark.asyncio
     async def test_direct_beats_poor_financial_consulting(self, dataset, model):
@@ -586,13 +563,10 @@ class TestSkillRelevanceFinancialConsultingGroup:
         avg_direct = sum(r.score for r in direct_results) / len(direct_results)
         avg_poor = sum(r.score for r in poor_results) / len(poor_results)
 
-        print(
-            f"\nfinancial-consulting-research — avg direct: {avg_direct:.2f}, "
-            f"avg poor: {avg_poor:.2f}"
-        )
-        assert avg_direct > avg_poor, (
-            f"Direct-match avg ({avg_direct:.2f}) should exceed poor-match avg ({avg_poor:.2f})"
-        )
+        print(f"\nfinancial-consulting-research — avg direct: {avg_direct:.2f}, " f"avg poor: {avg_poor:.2f}")
+        assert (
+            avg_direct > avg_poor
+        ), f"Direct-match avg ({avg_direct:.2f}) should exceed poor-match avg ({avg_poor:.2f})"
 
     @pytest.mark.asyncio
     async def test_chinese_language_case_scores_direct_match(self, dataset, model):
@@ -605,8 +579,7 @@ class TestSkillRelevanceFinancialConsultingGroup:
         results = await _run_grader(grader, [chinese_case])
 
         assert results[0].score == 3, (
-            f"Chinese-language task should be a direct match (score 3), "
-            f"got {results[0].score}: {results[0].reason}"
+            f"Chinese-language task should be a direct match (score 3), " f"got {results[0].score}: {results[0].reason}"
         )
 
 

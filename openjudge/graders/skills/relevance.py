@@ -320,4 +320,3 @@ class SkillRelevanceGrader(LLMGrader):
 
 
 __all__ = ["SkillRelevanceGrader", "DEFAULT_SKILL_RELEVANCE_TEMPLATE"]
-

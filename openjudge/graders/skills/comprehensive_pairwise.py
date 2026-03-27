@@ -46,12 +46,8 @@ _DIMENSIONS = ("relevance", "completeness", "safety", "structure")
 class DimensionComparison(BaseModel):
     """Head-to-head comparison verdict for a single evaluation dimension."""
 
-    winner: int = Field(
-        description="1 if Skill 1 is better, 2 if Skill 2 is better, 0 if they are tied"
-    )
-    reason: str = Field(
-        description="Concise reason for the verdict, citing concrete evidence from both skills"
-    )
+    winner: int = Field(description="1 if Skill 1 is better, 2 if Skill 2 is better, 0 if they are tied")
+    reason: str = Field(description="Concise reason for the verdict, citing concrete evidence from both skills")
 
 
 class SkillComprehensivePairwiseCallback(BaseModel):
@@ -62,21 +58,11 @@ class SkillComprehensivePairwiseCallback(BaseModel):
     configurable dimension weights — it is NOT produced by the LLM.
     """
 
-    relevance_comparison: DimensionComparison = Field(
-        description="Head-to-head comparison on Relevance"
-    )
-    completeness_comparison: DimensionComparison = Field(
-        description="Head-to-head comparison on Completeness"
-    )
-    safety_comparison: DimensionComparison = Field(
-        description="Head-to-head comparison on Safety"
-    )
-    structure_comparison: DimensionComparison = Field(
-        description="Head-to-head comparison on Structure"
-    )
-    reason: str = Field(
-        description="Brief summary of the key differences observed across all four dimensions"
-    )
+    relevance_comparison: DimensionComparison = Field(description="Head-to-head comparison on Relevance")
+    completeness_comparison: DimensionComparison = Field(description="Head-to-head comparison on Completeness")
+    safety_comparison: DimensionComparison = Field(description="Head-to-head comparison on Safety")
+    structure_comparison: DimensionComparison = Field(description="Head-to-head comparison on Structure")
+    reason: str = Field(description="Brief summary of the key differences observed across all four dimensions")
 
 
 # ─────────────────────────────── English Prompt ──────────────────────────────
@@ -400,7 +386,7 @@ def _compute_ranking(
 
     for dim in _DIMENSIONS:
         comparison: DimensionComparison = getattr(parsed, f"{dim}_comparison")
-        w = weights.get(dim, 0.)
+        w = weights.get(dim, 0.0)
         if comparison.winner == 1:
             score_1 += w
         elif comparison.winner == 2:

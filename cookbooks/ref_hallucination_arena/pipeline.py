@@ -545,7 +545,7 @@ class RefArenaPipeline:
             total_v = sum(m.verified for m in model_results)
             total_r = sum(m.total_refs for m in model_results)
             if total_r > 0:
-                logger.info(f"  {model_name}: {total_v}/{total_r} verified " f"({total_v/total_r:.1%})")
+                logger.info(f"  {model_name}: {total_v}/{total_r} verified " f"({total_v / total_r:.1%})")
             else:
                 logger.info(f"  {model_name}: 0 refs")
 
@@ -735,7 +735,7 @@ class RefArenaPipeline:
             tv = sum(m.verified for m in mr)
             tr = sum(m.total_refs for m in mr)
             if tr > 0:
-                logger.info(f"  {mn}: {tv}/{tr} verified ({tv/tr:.1%})")
+                logger.info(f"  {mn}: {tv}/{tr} verified ({tv / tr:.1%})")
             else:
                 logger.info(f"  {mn}: 0 refs")
 

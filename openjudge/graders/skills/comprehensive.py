@@ -56,7 +56,9 @@ class SkillComprehensiveCallback(BaseModel):
     safety_reason: str = Field(default="", description="Reason for the safety score")
     structure_score: int = Field(description="Structure score [1, 3]")
     structure_reason: str = Field(default="", description="Reason for the structure score")
-    reason: str = Field(default="", description="Overall summary of key strengths and weaknesses across all four dimensions")
+    reason: str = Field(
+        default="", description="Overall summary of key strengths and weaknesses across all four dimensions"
+    )
 
 
 # ─────────────────────────────── English Prompt ──────────────────────────────
@@ -426,10 +428,7 @@ def _compute_score(
     if total_weight == 0:
         return 1.0
 
-    weighted_sum = sum(
-        getattr(parsed, f"{dim}_score") * weights.get(dim, 0.0)
-        for dim in _DIMENSIONS
-    )
+    weighted_sum = sum(getattr(parsed, f"{dim}_score") * weights.get(dim, 0.0) for dim in _DIMENSIONS)
     return round(weighted_sum / total_weight, 1)
 
 
@@ -628,9 +627,7 @@ class SkillComprehensiveGrader(LLMGrader):
                     chat_response = chunk
 
             raw = chat_response.parsed
-            parsed: SkillComprehensiveCallback = (
-                SkillComprehensiveCallback(**raw) if isinstance(raw, dict) else raw
-            )
+            parsed: SkillComprehensiveCallback = SkillComprehensiveCallback(**raw) if isinstance(raw, dict) else raw
 
             # ── 2. Compute weighted score ────────────────────────────────────
             score = _compute_score(parsed, self.dimension_weights)

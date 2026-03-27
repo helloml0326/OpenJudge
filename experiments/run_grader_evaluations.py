@@ -342,16 +342,16 @@ async def run_all_evaluations(
         "agent": agent_model,
     }
 
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("OpenJudge Grader Evaluation Suite")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
     print(f"Categories: {', '.join(categories)}")
     print(f"Text Model: {text_model}")
     print(f"Multimodal Model: {multimodal_model}")
     print(f"Agent Model: {agent_model}")
     print(f"Max Workers: {max_workers}")
     print(f"Total Evaluations: {len(configs_to_run)}")
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
     # Create semaphore for concurrency control
     semaphore = asyncio.Semaphore(max_workers)

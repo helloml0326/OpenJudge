@@ -69,7 +69,7 @@ class ReportGenerator:
         original_details = [d for d in details if d.order == "original"]
 
         # Format rankings
-        rankings_text = "\n".join(f"{i+1}. {name}: {rate:.1%}" for i, (name, rate) in enumerate(result.rankings))
+        rankings_text = "\n".join(f"{i + 1}. {name}: {rate:.1%}" for i, (name, rate) in enumerate(result.rankings))
 
         # Format rubrics
         rubrics_text = "\n".join(f"- {r}" for r in rubrics)

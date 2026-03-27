@@ -168,9 +168,7 @@ class TestSkillSafetyGraderUnit:
 
             result = await grader.aevaluate(
                 skill_name="code-review",
-                skill_description=(
-                    "Use this skill to review code changes and optionally run tests."
-                ),
+                skill_description=("Use this skill to review code changes and optionally run tests."),
                 skill_md=(
                     "# Code Review Skill\n\n"
                     "## Steps\n"
@@ -398,10 +396,7 @@ def _load_dataset(skill_group: str | None = None):
         cases = json.load(f)
 
     if skill_group is not None:
-        cases = [
-            c for c in cases
-            if c.get("skill_group", "code-review") == skill_group
-        ]
+        cases = [c for c in cases if c.get("skill_group", "code-review") == skill_group]
     return cases
 
 
@@ -472,13 +467,9 @@ class TestSkillSafetyGraderQuality:
             desc = case["description"]
 
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}")
 
         assert not violations, "Score bound violations:\n" + "\n".join(violations)
 
@@ -498,9 +489,7 @@ class TestSkillSafetyGraderQuality:
 
         print(f"\nAll cases — avg safe: {avg_safe:.2f}, avg unsafe: {avg_unsafe:.2f}")
 
-        assert avg_safe > avg_unsafe, (
-            f"Safe avg ({avg_safe:.2f}) should exceed unsafe avg ({avg_unsafe:.2f})"
-        )
+        assert avg_safe > avg_unsafe, f"Safe avg ({avg_safe:.2f}) should exceed unsafe avg ({avg_unsafe:.2f})"
 
     @pytest.mark.asyncio
     async def test_consistency_across_runs(self, dataset, model):
@@ -522,10 +511,7 @@ class TestSkillSafetyGraderQuality:
         def _has_score(r) -> bool:
             return r is not None and hasattr(r, "score") and r.score is not None
 
-        agreements = sum(
-            1 for r1, r2 in zip(run1, run2)
-            if _has_score(r1) and _has_score(r2) and r1.score == r2.score
-        )
+        agreements = sum(1 for r1, r2 in zip(run1, run2) if _has_score(r1) and _has_score(r2) and r1.score == r2.score)
         total = len([r for r in run1 if _has_score(r)])
         consistency = agreements / total if total > 0 else 1.0
 
@@ -569,13 +555,9 @@ class TestSkillSafetyCodeReviewGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
         assert not violations, "code-review score bound violations:\n" + "\n".join(violations)
 
@@ -607,8 +589,7 @@ class TestSkillSafetyCodeReviewGroup:
         results = await _run_grader(grader, [force_push_case])
 
         assert results[0].score == 1, (
-            f"Auto-fix + force-push skill should score 1 (unsafe), "
-            f"got {results[0].score}: {results[0].reason}"
+            f"Auto-fix + force-push skill should score 1 (unsafe), " f"got {results[0].score}: {results[0].reason}"
         )
 
     @pytest.mark.asyncio
@@ -622,8 +603,7 @@ class TestSkillSafetyCodeReviewGroup:
         results = await _run_grader(grader, [exfil_case])
 
         assert results[0].score == 1, (
-            f"Credential exfiltration skill should score 1 (unsafe), "
-            f"got {results[0].score}: {results[0].reason}"
+            f"Credential exfiltration skill should score 1 (unsafe), " f"got {results[0].score}: {results[0].reason}"
         )
 
     @pytest.mark.asyncio
@@ -707,17 +687,11 @@ class TestSkillSafetyFinancialConsultingGroup:
         for case, result in zip(dataset, results):
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
-        assert not violations, (
-            "financial-consulting-research score bound violations:\n" + "\n".join(violations)
-        )
+        assert not violations, "financial-consulting-research score bound violations:\n" + "\n".join(violations)
 
     @pytest.mark.asyncio
     async def test_safe_beats_unsafe_financial_consulting(self, dataset, model):
@@ -733,13 +707,8 @@ class TestSkillSafetyFinancialConsultingGroup:
         avg_safe = sum(r.score for r in safe_results) / len(safe_results)
         avg_unsafe = sum(r.score for r in unsafe_results) / len(unsafe_results)
 
-        print(
-            f"\nfinancial-consulting-research — avg safe: {avg_safe:.2f}, "
-            f"avg unsafe: {avg_unsafe:.2f}"
-        )
-        assert avg_safe > avg_unsafe, (
-            f"Safe avg ({avg_safe:.2f}) should exceed unsafe avg ({avg_unsafe:.2f})"
-        )
+        print(f"\nfinancial-consulting-research — avg safe: {avg_safe:.2f}, " f"avg unsafe: {avg_unsafe:.2f}")
+        assert avg_safe > avg_unsafe, f"Safe avg ({avg_safe:.2f}) should exceed unsafe avg ({avg_unsafe:.2f})"
 
     @pytest.mark.asyncio
     async def test_safe_skill_with_disclaimer_scores_3(self, dataset, model):

@@ -393,9 +393,7 @@ class TestSkillComprehensivePairwiseGraderUnit:
                 skill_2=_SKILL_2_EXAMPLE,
             )
 
-        assert result.rank == [2, 1], (
-            "Safety-dominant weights should rank Skill 2 first when it wins safety"
-        )
+        assert result.rank == [2, 1], "Safety-dominant weights should rank Skill 2 first when it wins safety"
 
     # ------------------------------------------------------------------
     # Metadata structure
@@ -430,9 +428,9 @@ class TestSkillComprehensivePairwiseGraderUnit:
             "weighted_scores",
             "dimension_weights",
         }
-        assert required_keys.issubset(set(result.metadata.keys())), (
-            f"Missing metadata keys: {required_keys - set(result.metadata.keys())}"
-        )
+        assert required_keys.issubset(
+            set(result.metadata.keys())
+        ), f"Missing metadata keys: {required_keys - set(result.metadata.keys())}"
 
     @pytest.mark.asyncio
     async def test_per_dimension_comparisons_stored_in_metadata(self):
@@ -605,16 +603,12 @@ def _load_dataset(skill_group: str | None = None, expected_winner: int | None = 
     return cases
 
 
-async def _run_grader(
-    grader: SkillComprehensivePairwiseGrader, cases: list
-) -> List[GraderRank]:
+async def _run_grader(grader: SkillComprehensivePairwiseGrader, cases: list) -> List[GraderRank]:
     """Run grader over cases via GradingRunner and return results."""
     flat = [{**c["parameters"], "_index": c["index"]} for c in cases]
     runner = GradingRunner(
         grader_configs={
-            "skill_comprehensive_pairwise": GraderConfig(
-                grader=grader, mapper=_GRADER_MAPPER
-            ),
+            "skill_comprehensive_pairwise": GraderConfig(grader=grader, mapper=_GRADER_MAPPER),
         }
     )
     results = await runner.arun(flat)
@@ -672,13 +666,10 @@ class TestSkillComprehensivePairwiseGraderQuality:
         assert len(results) == len(dataset)
         errors = [r for r in results if not _has_rank(r)]
         assert not errors, (
-            f"{len(errors)} evaluation(s) returned GraderError: "
-            f"{[getattr(r, 'error', '') for r in errors]}"
+            f"{len(errors)} evaluation(s) returned GraderError: " f"{[getattr(r, 'error', '') for r in errors]}"
         )
         for result in results:
-            assert result.rank in ([1, 2], [2, 1]), (
-                f"rank must be [1, 2] or [2, 1], got {result.rank}"
-            )
+            assert result.rank in ([1, 2], [2, 1]), f"rank must be [1, 2] or [2, 1], got {result.rank}"
 
     @pytest.mark.asyncio
     async def test_reason_is_non_empty(self, dataset, model):
@@ -702,14 +693,10 @@ class TestSkillComprehensivePairwiseGraderQuality:
                 pytest.fail(f"Result {idx} is GraderError: {getattr(result, 'error', 'unknown')}")
             for dim in ("relevance", "completeness", "safety", "structure"):
                 key = f"{dim}_comparison"
-                assert key in result.metadata, (
-                    f"Result {idx}: missing '{key}' in metadata"
-                )
+                assert key in result.metadata, f"Result {idx}: missing '{key}' in metadata"
                 cmp = result.metadata[key]
                 assert "winner" in cmp, f"Result {idx}: '{key}' missing 'winner'"
-                assert cmp["winner"] in (0, 1, 2), (
-                    f"Result {idx}: {key}.winner={cmp['winner']} not in {{0,1,2}}"
-                )
+                assert cmp["winner"] in (0, 1, 2), f"Result {idx}: {key}.winner={cmp['winner']} not in {{0,1,2}}"
                 assert "reason" in cmp, f"Result {idx}: '{key}' missing 'reason'"
 
     @pytest.mark.asyncio
@@ -733,9 +720,7 @@ class TestSkillComprehensivePairwiseGraderQuality:
         violations = []
         for case, result in zip(decisive_cases, results):
             if not _has_rank(result):
-                violations.append(
-                    f"Case {case['index']}: GraderError — {getattr(result, 'error', 'unknown')}"
-                )
+                violations.append(f"Case {case['index']}: GraderError — {getattr(result, 'error', 'unknown')}")
                 continue
             expected = case["expected_winner"]
             actual = result.rank[0]
@@ -765,9 +750,7 @@ class TestSkillComprehensivePairwiseGraderQuality:
         run2 = cast(List[GraderRank], results["run2"])
 
         agreements = sum(
-            1
-            for r1, r2 in zip(run1, run2)
-            if _has_rank(r1) and _has_rank(r2) and r1.rank[0] == r2.rank[0]
+            1 for r1, r2 in zip(run1, run2) if _has_rank(r1) and _has_rank(r2) and r1.rank[0] == r2.rank[0]
         )
         total = sum(1 for r in run1 if _has_rank(r))
         consistency = agreements / total if total > 0 else 1.0
@@ -812,9 +795,9 @@ class TestSkillComprehensivePairwiseCodeReviewGroup:
         results = await _run_grader(grader, [case])
 
         assert _has_rank(results[0]), f"GraderError: {getattr(results[0], 'error', 'unknown')}"
-        assert results[0].rank[0] == 1, (
-            f"Excellent code-review should rank 1st, got rank={results[0].rank}: {results[0].reason}"
-        )
+        assert (
+            results[0].rank[0] == 1
+        ), f"Excellent code-review should rank 1st, got rank={results[0].rank}: {results[0].reason}"
 
     @pytest.mark.asyncio
     async def test_wrong_domain_vs_correct_domain_skill2_wins(self, dataset, model):
@@ -1010,7 +993,7 @@ class TestSkillComprehensivePairwiseFinancialGroup:
 
         assert len(results) == len(dataset)
         for idx, result in enumerate(results):
-            assert _has_rank(result), (
-                f"Case {dataset[idx]['index']}: GraderError — {getattr(result, 'error', 'unknown')}"
-            )
+            assert _has_rank(
+                result
+            ), f"Case {dataset[idx]['index']}: GraderError — {getattr(result, 'error', 'unknown')}"
             assert result.rank in ([1, 2], [2, 1])

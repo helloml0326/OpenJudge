@@ -293,7 +293,7 @@ class BibExtractor:
 
                 refs.append(
                     Reference(
-                        key=f"ref_{len(refs)+1}",
+                        key=f"ref_{len(refs) + 1}",
                         title=title.strip(),
                         authors=authors.strip() if authors else None,
                         year=year.strip(),

@@ -303,7 +303,10 @@ class TestSkillComprehensiveGraderUnit:
         """A relevance-heavy weight scheme boosts the relevance dimension's impact."""
         mock_response = AsyncMock()
         mock_response.parsed = _make_parsed(
-            relevance=3, completeness=1, safety=1, structure=1,
+            relevance=3,
+            completeness=1,
+            safety=1,
+            structure=1,
             reason="Great relevance, poor everything else.",
         )
 
@@ -329,8 +332,7 @@ class TestSkillComprehensiveGraderUnit:
             )
 
         assert result.score > 2.5, (
-            f"Relevance-heavy weights should push score above 2.5 when relevance=3, "
-            f"got {result.score}"
+            f"Relevance-heavy weights should push score above 2.5 when relevance=3, " f"got {result.score}"
         )
 
     # ------------------------------------------------------------------
@@ -360,16 +362,20 @@ class TestSkillComprehensiveGraderUnit:
             )
 
         required_keys = {
-            "relevance_score", "relevance_reason",
-            "completeness_score", "completeness_reason",
-            "safety_score", "safety_reason",
-            "structure_score", "structure_reason",
+            "relevance_score",
+            "relevance_reason",
+            "completeness_score",
+            "completeness_reason",
+            "safety_score",
+            "safety_reason",
+            "structure_score",
+            "structure_reason",
             "dimension_weights",
             "threshold",
         }
-        assert required_keys.issubset(set(result.metadata.keys())), (
-            f"Missing metadata keys: {required_keys - set(result.metadata.keys())}"
-        )
+        assert required_keys.issubset(
+            set(result.metadata.keys())
+        ), f"Missing metadata keys: {required_keys - set(result.metadata.keys())}"
 
     @pytest.mark.asyncio
     async def test_threshold_propagated_to_metadata(self):
@@ -429,7 +435,10 @@ class TestSkillComprehensiveGraderUnit:
         """Per-dimension integer scores from the LLM are correctly stored in metadata."""
         mock_response = AsyncMock()
         mock_response.parsed = _make_parsed(
-            relevance=3, completeness=1, safety=2, structure=3,
+            relevance=3,
+            completeness=1,
+            safety=2,
+            structure=3,
             reason="Mixed.",
         )
 
@@ -536,10 +545,7 @@ def _load_dataset(skill_group: str | None = None, quality_tier: str | None = Non
         cases = json.load(f)
 
     if skill_group is not None:
-        cases = [
-            c for c in cases
-            if c.get("skill_group", "code-review") == skill_group
-        ]
+        cases = [c for c in cases if c.get("skill_group", "code-review") == skill_group]
     if quality_tier is not None:
         cases = [c for c in cases if c.get("quality_tier") == quality_tier]
     return cases
@@ -603,7 +609,9 @@ class TestSkillComprehensiveGraderQuality:
 
         assert len(results) == len(dataset)
         errors = [r for r in results if not _has_score(r)]
-        assert not errors, f"{len(errors)} evaluation(s) returned GraderError: {[getattr(r, 'error', '') for r in errors]}"
+        assert (
+            not errors
+        ), f"{len(errors)} evaluation(s) returned GraderError: {[getattr(r, 'error', '') for r in errors]}"
         for result in results:
             assert 1.0 <= result.score <= 3.0, f"Score out of range: {result.score}"
             assert len(result.reason) >= 0, "Reason should be a string"
@@ -624,13 +632,9 @@ class TestSkillComprehensiveGraderQuality:
             desc = case["description"]
 
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {idx} ({desc}): score {score} > max {case['max_expect_score']}")
 
         assert not violations, "Score bound violations:\n" + "\n".join(violations)
 
@@ -653,9 +657,7 @@ class TestSkillComprehensiveGraderQuality:
         avg_low = sum(r.score for r in valid_low) / len(valid_low)
 
         print(f"\nAll skills — avg high: {avg_high:.2f}, avg low: {avg_low:.2f}")
-        assert avg_high > avg_low, (
-            f"High-quality avg ({avg_high:.2f}) should exceed low-quality avg ({avg_low:.2f})"
-        )
+        assert avg_high > avg_low, f"High-quality avg ({avg_high:.2f}) should exceed low-quality avg ({avg_low:.2f})"
 
     @pytest.mark.asyncio
     async def test_per_dimension_scores_present_in_metadata(self, dataset, model):
@@ -667,12 +669,10 @@ class TestSkillComprehensiveGraderQuality:
             if not _has_score(result):
                 pytest.fail(f"Result {idx} is GraderError: {getattr(result, 'error', 'unknown')}")
             for dim in ("relevance", "completeness", "safety", "structure"):
-                assert f"{dim}_score" in result.metadata, (
-                    f"Result {idx}: missing '{dim}_score' in metadata"
-                )
-                assert 1 <= result.metadata[f"{dim}_score"] <= 3, (
-                    f"Result {idx}: {dim}_score {result.metadata[f'{dim}_score']} out of range"
-                )
+                assert f"{dim}_score" in result.metadata, f"Result {idx}: missing '{dim}_score' in metadata"
+                assert (
+                    1 <= result.metadata[f"{dim}_score"] <= 3
+                ), f"Result {idx}: {dim}_score {result.metadata[f'{dim}_score']} out of range"
 
     @pytest.mark.asyncio
     async def test_dimension_weights_reported_correctly(self, dataset, model):
@@ -681,9 +681,9 @@ class TestSkillComprehensiveGraderQuality:
         results = await _run_grader(grader, dataset[:1])  # test with just one case
 
         weights = results[0].metadata.get("dimension_weights", {})
-        assert weights == DEFAULT_DIMENSION_WEIGHTS, (
-            f"Reported weights {weights} differ from configured {DEFAULT_DIMENSION_WEIGHTS}"
-        )
+        assert (
+            weights == DEFAULT_DIMENSION_WEIGHTS
+        ), f"Reported weights {weights} differ from configured {DEFAULT_DIMENSION_WEIGHTS}"
 
     @pytest.mark.asyncio
     async def test_consistency_across_runs(self, dataset, model):
@@ -706,8 +706,7 @@ class TestSkillComprehensiveGraderQuality:
             return r is not None and hasattr(r, "score") and r.score is not None
 
         agreements = sum(
-            1 for r1, r2 in zip(run1, run2)
-            if _has_score(r1) and _has_score(r2) and abs(r1.score - r2.score) <= 0.5
+            1 for r1, r2 in zip(run1, run2) if _has_score(r1) and _has_score(r2) and abs(r1.score - r2.score) <= 0.5
         )
         total = len([r for r in run1 if _has_score(r)])
         consistency = agreements / total if total > 0 else 1.0
@@ -755,13 +754,9 @@ class TestSkillComprehensiveCodeReviewGroup:
                 continue
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
         assert not violations, "code-review score bound violations:\n" + "\n".join(violations)
 
@@ -776,8 +771,7 @@ class TestSkillComprehensiveCodeReviewGroup:
         results = await _run_grader(grader, [excellent_case])
 
         assert results[0].score >= 2.5, (
-            f"Full-quality code-review skill should score >= 2.5, "
-            f"got {results[0].score}: {results[0].reason}"
+            f"Full-quality code-review skill should score >= 2.5, " f"got {results[0].score}: {results[0].reason}"
         )
 
     @pytest.mark.asyncio
@@ -807,8 +801,7 @@ class TestSkillComprehensiveCodeReviewGroup:
 
         relevance = results[0].metadata.get("relevance_score")
         assert relevance == 1, (
-            f"AWS deployment task against code-review skill should have relevance_score=1, "
-            f"got {relevance}"
+            f"AWS deployment task against code-review skill should have relevance_score=1, " f"got {relevance}"
         )
 
     @pytest.mark.asyncio
@@ -838,8 +831,7 @@ class TestSkillComprehensiveCodeReviewGroup:
         results = await _run_grader(grader, [minimal_case])
 
         assert results[0].score <= 2.0, (
-            f"Nearly-empty SKILL.md should score <= 2.0, "
-            f"got {results[0].score}: {results[0].reason}"
+            f"Nearly-empty SKILL.md should score <= 2.0, " f"got {results[0].score}: {results[0].reason}"
         )
 
     @pytest.mark.asyncio
@@ -913,17 +905,11 @@ class TestSkillComprehensiveFinancialConsultingGroup:
                 continue
             score = result.score
             if "min_expect_score" in case and score < case["min_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} < min {case['min_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} < min {case['min_expect_score']}")
             if "max_expect_score" in case and score > case["max_expect_score"]:
-                violations.append(
-                    f"Case {case['index']}: score {score} > max {case['max_expect_score']}"
-                )
+                violations.append(f"Case {case['index']}: score {score} > max {case['max_expect_score']}")
 
-        assert not violations, (
-            "financial-consulting-research score bound violations:\n" + "\n".join(violations)
-        )
+        assert not violations, "financial-consulting-research score bound violations:\n" + "\n".join(violations)
 
     @pytest.mark.asyncio
     async def test_excellent_financial_case_scores_above_2_5(self, dataset, model):
@@ -975,8 +961,7 @@ class TestSkillComprehensiveFinancialConsultingGroup:
 
         print(f"\nSafety with disclaimer: {safety_with}, without: {safety_without}")
         assert safety_with > safety_without, (
-            f"Skill with disclaimer should have higher safety_score ({safety_with}) "
-            f"than without ({safety_without})"
+            f"Skill with disclaimer should have higher safety_score ({safety_with}) " f"than without ({safety_without})"
         )
 
     @pytest.mark.asyncio
@@ -1009,9 +994,5 @@ class TestSkillComprehensiveFinancialConsultingGroup:
         avg_high = sum(r.score for r in high_results) / len(high_results)
         avg_low = sum(r.score for r in low_results) / len(low_results)
 
-        print(
-            f"\nfinancial-consulting-research — avg high: {avg_high:.2f}, avg low: {avg_low:.2f}"
-        )
-        assert avg_high > avg_low, (
-            f"High-quality avg ({avg_high:.2f}) should exceed low-quality avg ({avg_low:.2f})"
-        )
+        print(f"\nfinancial-consulting-research — avg high: {avg_high:.2f}, avg low: {avg_low:.2f}")
+        assert avg_high > avg_low, f"High-quality avg ({avg_high:.2f}) should exceed low-quality avg ({avg_low:.2f})"
