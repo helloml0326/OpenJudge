@@ -120,6 +120,7 @@ def _render_data_preview(data: list[dict[str, Any]], max_rows: int = 5) -> None:
     if not data:
         return
 
+    preview_count_text = t("grader.batch.preview_count", shown=min(len(data), max_rows), total=len(data))
     st.markdown(
         f"""<div style="
             font-weight: 500;
@@ -127,9 +128,7 @@ def _render_data_preview(data: list[dict[str, Any]], max_rows: int = 5) -> None:
             font-size: 0.85rem;
             margin-bottom: 0.5rem;
         ">
-            {t("grader.batch.data_preview")} ({t(
-                "grader.batch.preview_count", shown=min(len(data), max_rows), total=len(data)
-            )})
+            {t("grader.batch.data_preview")} ({preview_count_text})
         </div>""",
         unsafe_allow_html=True,
     )

@@ -289,7 +289,7 @@ def _init_endpoints_from_preset() -> None:
         new_endpoint_ids.append(ep_id)
 
         # Set widget values
-        st.session_state[f"arena_ep_name_{ep_id}"] = ep_data.get("name", f"model_{i+1}")
+        st.session_state[f"arena_ep_name_{ep_id}"] = ep_data.get("name", f"model_{i + 1}")
 
         # Determine provider from base_url
         base_url = ep_data.get("base_url", "")

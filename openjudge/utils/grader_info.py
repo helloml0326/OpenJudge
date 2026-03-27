@@ -74,7 +74,7 @@ def get_all_grader_info() -> List[Dict[str, Any]]:
         if f.stem != "__init__":
             _get_defs_of_classes_having_parent(f, project_root_folder, defs_of_classes_having_parent)
 
-    logger.info(f"classes having parent:{len(defs_of_classes_having_parent)}, {(time.time_ns() - t0)/1000000}ms")
+    logger.info(f"classes having parent:{len(defs_of_classes_having_parent)}, {(time.time_ns() - t0) / 1000000}ms")
 
     all_grader_class_defs = _get_grader_class_def(defs_of_classes_having_parent)
 
@@ -84,7 +84,7 @@ def get_all_grader_info() -> List[Dict[str, Any]]:
         grader_info = _parse_grader_class_def(class_def, module_path_and_source_code_tuple)
         all_grader_info[grader_info.class_name] = grader_info
 
-    logger.info(f"all grader info:{len(all_grader_info)}, {(time.time_ns() - t0)/1000000}ms")
+    logger.info(f"all grader info:{len(all_grader_info)}, {(time.time_ns() - t0) / 1000000}ms")
 
     return all_grader_info
 
@@ -146,7 +146,7 @@ def _get_grader_class_def(defs_of_classes_having_parent: Dict[ast.ClassDef, Tupl
     # remove the seed
     all_grader_class_defs.pop("BaseGrader")
 
-    logger.info(f"all grader class defs:{len(all_grader_class_defs)}, {(time.time_ns() - t0)/1000000}ms")
+    logger.info(f"all grader class defs:{len(all_grader_class_defs)}, {(time.time_ns() - t0) / 1000000}ms")
     return all_grader_class_defs
 
 

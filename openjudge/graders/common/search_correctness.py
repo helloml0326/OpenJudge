@@ -73,7 +73,7 @@ class TavilySearchTool(BaseTool):
             for i, r in enumerate(results[:5]):
                 content = r.get("content", "")[:1500]
                 summary_parts.append(
-                    f"[{i+1}] {r.get('title', '')}\n" f"URL: {r.get('url', '')}\n" f"Content: {content}"
+                    f"[{i + 1}] {r.get('title', '')}\n" f"URL: {r.get('url', '')}\n" f"Content: {content}"
                 )
 
             return ToolResult(
