@@ -3,29 +3,30 @@
 Skill Graders
 
 This module contains graders for evaluating AI Agent Skill packages:
-- Safety evaluation: detects dangerous operations, overly broad permissions, and missing safeguards
+- Threat analysis: LLM-based semantic threat scanner with AITech taxonomy (prompt injection,
+  data exfiltration, command injection, obfuscation, tool exploitation, etc.)
+- Alignment evaluation: detects mismatches between SKILL.md declared intent and actual script behavior
 - Relevance evaluation: measures how well a skill's capabilities address a task description
 - Completeness evaluation: measures whether a skill provides sufficient detail to accomplish a task
 - Structure evaluation: assesses structural design quality across anti-pattern quality,
   specification compliance, progressive disclosure, and freedom calibration
-- Comprehensive evaluation: holistic multi-dimensional assessment combining all four dimensions
-- Comprehensive pairwise evaluation: head-to-head comparison of two skill candidates
+
+For multi-dimensional skill evaluation using all graders combined, see
+``cookbooks/skills_evaluation/runner.py`` (SkillsGradingRunner).
 """
 
 from openjudge.graders.skills.completeness import SkillCompletenessGrader
-from openjudge.graders.skills.comprehensive import SkillComprehensiveGrader
-from openjudge.graders.skills.comprehensive_pairwise import (
-    SkillComprehensivePairwiseGrader,
+from openjudge.graders.skills.declaration_alignment import (
+    SkillDeclarationAlignmentGrader,
 )
+from openjudge.graders.skills.design import SkillDesignGrader
 from openjudge.graders.skills.relevance import SkillRelevanceGrader
-from openjudge.graders.skills.safety import SkillSafetyGrader
-from openjudge.graders.skills.structure import SkillStructureGrader
+from openjudge.graders.skills.threat_analysis import SkillThreatAnalysisGrader
 
 __all__ = [
-    "SkillSafetyGrader",
+    "SkillThreatAnalysisGrader",
+    "SkillDeclarationAlignmentGrader",
     "SkillRelevanceGrader",
     "SkillCompletenessGrader",
-    "SkillStructureGrader",
-    "SkillComprehensiveGrader",
-    "SkillComprehensivePairwiseGrader",
+    "SkillDesignGrader",
 ]

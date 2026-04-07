@@ -162,6 +162,20 @@ Evaluate vision-language tasks and image quality. [→ Detailed Documentation](m
 || `ImageHelpfulnessGrader` | Assesses if images help understanding | LLM-Based | 1-5 |
 || `TextToImageGrader` | Evaluates text-to-image generation quality | LLM-Based | 1-5 |
 
+
+### Skill Graders
+
+Evaluate AI Agent Skill packages across security, design, and task-fit dimensions. [→ Detailed Documentation](skills.md)
+
+|| Grader | Description | Type | Score Range |
+|||--------|-------------|------|-------------|
+|| `SkillThreatAnalysisGrader` | Security threat scanner using AITech taxonomy | LLM-Based | 1-4 |
+|| `SkillDeclarationAlignmentGrader` | Detects mismatches between declared and actual behavior | LLM-Based | 1-3 |
+|| `SkillCompletenessGrader` | Checks if skill provides sufficient detail to act on | LLM-Based | 1-3 |
+|| `SkillRelevanceGrader` | Measures skill-to-task match quality | LLM-Based | 1-3 |
+|| `SkillDesignGrader` | Assesses structural design quality across 7 dimensions | LLM-Based | 1-5 |
+
+
 ## Next Steps
 
 **Explore Graders by Category:**
@@ -173,6 +187,7 @@ Evaluate vision-language tasks and image quality. [→ Detailed Documentation](m
 - [Code & Math Graders](code_math.md) — Code execution and math verification
 - [Format Graders](format.md) — Structure validation (JSON, Length, Repetition, Reasoning Format)
 - [Multimodal Graders](multimodal.md) — Vision and image tasks
+- [Skill Graders](skills.md) — Agent Skill package security, completeness, relevance, and design quality
 
 **Advanced Usage:**
 
