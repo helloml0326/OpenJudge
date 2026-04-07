@@ -52,6 +52,8 @@ It can also convert grading results into **reward signals** to help you **fine-t
 
 ## News
 
+- **2026-04-07** - 🔒 **Skill Graders** - 5 new LLM-based graders for evaluating AI Agent Skill packages: threat analysis (AITech taxonomy), declaration alignment, completeness, relevance, and design quality. 👉 [Documentation](./docs/built_in_graders/skills.md) | [Cookbook](./cookbooks/skills_evaluation/README.md)
+
 - **2026-03-10** - 🛠️ **New Skills** - Claude authenticity verification, find skills combo, and more. 👉 [Browse Skills](https://openjudge.me/skills)
 
 - **2026-02-12** - 📚 **Reference Hallucination Arena** - Benchmark for evaluating LLM academic reference hallucination. 👉 [Documentation](./docs/validating_graders/ref_hallucination_arena.md) | 📊 [Leaderboard](https://openjudge.me/leaderboard)
