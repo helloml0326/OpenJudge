@@ -499,6 +499,8 @@ class SkillDesignGrader(LLMGrader):
             ... )
         """
         try:
+            # Kept for API parity with other skill graders; prompts currently use manifest + body only.
+            _ = (script_contents, reference_contents)
             result = await super()._aevaluate(
                 skill_name=skill_name,
                 skill_manifest=skill_manifest or "(none)",

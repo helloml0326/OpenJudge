@@ -409,6 +409,8 @@ class SkillCompletenessGrader(LLMGrader):
             ... )
         """
         try:
+            # Kept for API parity with other skill graders; prompts currently use manifest + body only.
+            _ = (script_contents, reference_contents)
             result = await super()._aevaluate(
                 task_description=task_description or "",
                 skill_name=skill_name,

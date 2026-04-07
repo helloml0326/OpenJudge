@@ -39,6 +39,11 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from dotenv import load_dotenv
 
+try:
+    from openai import RateLimitError as _OpenAIRateLimitError
+except ImportError:
+    _OpenAIRateLimitError = None  # type: ignore[assignment,misc]
+
 from openjudge.analyzer.statistical import ConsistencyAnalyzer
 from openjudge.analyzer.validation import AccuracyAnalyzer
 from openjudge.graders.skills.design import SkillDesignGrader
@@ -57,6 +62,23 @@ load_dotenv(DOTENV_PATH)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
 RUN_QUALITY_TESTS = bool(OPENAI_API_KEY and OPENAI_BASE_URL)
+
+# Accuracy benchmark requires a strong judge model. Lighter models produce
+# systematically different calibration from the curated expected scores.
+# Only run accuracy gating when the configured model is a top-tier variant.
+_CONFIGURED_MODEL = os.getenv("OPENAI_MODEL", "qwen-max").lower()
+_STRONG_MODEL_KEYWORDS = (
+    "qwen-max",
+    "qwen3-max",
+    "qwen2.5-max",
+    "gpt-4",
+    "claude-3-opus",
+    "claude-3-5",
+    "claude-3-7",
+    "gemini-1.5-pro",
+    "gemini-2",
+)
+RUN_ACCURACY_TESTS = RUN_QUALITY_TESTS and any(k in _CONFIGURED_MODEL for k in _STRONG_MODEL_KEYWORDS)
 
 
 def _load_hf_json(path: Path) -> List[dict]:
@@ -248,6 +270,9 @@ class TestSkillDesignGraderQuality:
             assert 1 <= r.score <= 5
             assert len(r.reason) > 0
 
+    @pytest.mark.skipif(
+        not RUN_ACCURACY_TESTS, reason="Accuracy benchmark requires a strong judge model (qwen-max or equivalent)"
+    )
     @pytest.mark.asyncio
     async def test_accuracy_vs_expected(self, dataset: List[Dict[str, Any]], model: OpenAIChatModel) -> None:
         grader = SkillDesignGrader(model=model, threshold=3)
@@ -258,7 +283,12 @@ class TestSkillDesignGraderQuality:
             ),
         }
         runner = GradingRunner(grader_configs=grader_configs, max_concurrency=4)
-        results = await runner.arun(dataset)
+        try:
+            results = await runner.arun(dataset)
+        except Exception as exc:
+            if _OpenAIRateLimitError and isinstance(exc, _OpenAIRateLimitError):
+                pytest.skip(f"Skipped: API quota exceeded ({exc})")
+            raise
 
         analyzer = AccuracyAnalyzer()
         acc = analyzer.analyze(
@@ -280,7 +310,12 @@ class TestSkillDesignGraderQuality:
             "run_b": GraderConfig(grader=grader, mapper=_design_mapper),
         }
         runner = GradingRunner(grader_configs=grader_configs, max_concurrency=4)
-        results = await runner.arun(dataset)
+        try:
+            results = await runner.arun(dataset)
+        except Exception as exc:
+            if _OpenAIRateLimitError and isinstance(exc, _OpenAIRateLimitError):
+                pytest.skip(f"Skipped: API quota exceeded ({exc})")
+            raise
 
         consistency = ConsistencyAnalyzer().analyze(
             dataset=dataset,

@@ -39,6 +39,11 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from dotenv import load_dotenv
 
+try:
+    from openai import RateLimitError as _OpenAIRateLimitError
+except ImportError:
+    _OpenAIRateLimitError = None  # type: ignore[assignment,misc]
+
 from openjudge.analyzer.statistical import ConsistencyAnalyzer
 from openjudge.analyzer.validation import AccuracyAnalyzer
 from openjudge.graders.skills.completeness import SkillCompletenessGrader
@@ -231,7 +236,12 @@ class TestSkillCompletenessGraderQuality:
             "run_b": GraderConfig(grader=grader, mapper=_completeness_mapper),
         }
         runner = GradingRunner(grader_configs=grader_configs, max_concurrency=4)
-        results = await runner.arun(dataset)
+        try:
+            results = await runner.arun(dataset)
+        except Exception as exc:
+            if _OpenAIRateLimitError and isinstance(exc, _OpenAIRateLimitError):
+                pytest.skip(f"Skipped: API quota exceeded ({exc})")
+            raise
 
         consistency = ConsistencyAnalyzer().analyze(
             dataset=dataset,
